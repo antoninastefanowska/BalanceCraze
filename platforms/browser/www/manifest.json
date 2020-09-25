@@ -1,0 +1,12 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "BalanceCraze",
+  "short_name": "BalanceCraze",
+  "version": "com.softsquare.balancecraze",
+  "description": "A fun and simple match-3 game about keeping healthy balance in your life.",
+  "author": "SoftSquare",
+  "icons": [],
+  "orientation": "landscape",
+  "start_url": "index.html"
+}
