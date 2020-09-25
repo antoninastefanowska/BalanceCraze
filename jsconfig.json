@@ -1,0 +1,10 @@
+{
+    "exclude": [
+        "node_modules",
+        "platforms",
+        "plugins",
+        "typings",
+        ".vscode",
+        "www/js/index.bundle.js"
+    ]
+}
