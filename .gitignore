@@ -13,3 +13,4 @@ node_modules/
 /typings/
 /package-lock.json
 /yarn.lock
+/www/index.bundle.js
