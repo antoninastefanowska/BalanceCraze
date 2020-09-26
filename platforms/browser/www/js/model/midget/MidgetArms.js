@@ -1,7 +1,12 @@
+import { changeContainerOrigin } from '../../Utils';
+
 class MidgetArms {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+
+        this.shoulderLevel = 115;
+        this.shoulderDistance = 61;
     }
 
     createArms(context, parentContainer) {
@@ -14,7 +19,10 @@ class MidgetArms {
         this.rightArm = context.add.image(0, 0, 'midget-arm-right', 0).setOrigin(0);
         this.rightArmCont.add(this.rightArm);
         this.armsCont.add([this.leftArmCont, this.rightArmCont]);
+
         parentContainer.add(this.armsCont);
+        changeContainerOrigin(this.leftArmCont, { x: 65, y: 116 });
+        changeContainerOrigin(this.rightArmCont, { x: 29, y: 114 });
     }
 
     createGrips(context) {
@@ -30,7 +38,9 @@ class MidgetArms {
         this.rightGripCont.add(this.rightGrip);
         this.gripsCont.add([this.leftGripCont, this.rightGripCont]);
 
-        this.globalGripsCont.add(this.gripsCont); 
+        this.globalGripsCont.add(this.gripsCont);
+        changeContainerOrigin(this.leftGripCont, { x: 65, y: 116 });
+        changeContainerOrigin(this.rightGripCont, { x: 29, y: 114 });
     }
 
     changePosition(x, y) {
@@ -60,6 +70,16 @@ class MidgetArms {
 
     show() {
         this.globalGripsCont.setActive(true).setVisible(true);
+    }
+
+    changeArmsAngle(angle) {
+        let value = parseInt((this.shoulderDistance / 2) * Math.tan(angle));
+        console.log(value);
+
+        this.leftArmCont.setY(this.shoulderLevel - value);
+        this.leftGripCont.setY(this.shoulderLevel - value);
+        this.rightArmCont.setY(this.shoulderLevel + value);
+        this.rightGripCont.setY(this.shoulderLevel + value);
     }
 
     changeArms1() {

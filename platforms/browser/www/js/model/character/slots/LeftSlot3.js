@@ -7,6 +7,7 @@ class LeftSlot3 extends Slot {
             x: 209,
             y: 116
         };
+        this.angle = -0.09;
     }
 }
 

@@ -5,8 +5,9 @@ class LeftSlot4 extends Slot {
         super();
         this.position = {
             x: 6,
-            y: 135
+            y: 140
         };
+        this.angle = -0.12;
     }
 }
 

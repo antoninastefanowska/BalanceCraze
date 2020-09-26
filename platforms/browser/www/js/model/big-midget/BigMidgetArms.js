@@ -1,6 +1,14 @@
+import { changeContainerOrigin } from '../../Utils';
 import MidgetArms from '../midget/MidgetArms';
 
 class BigMidgetArms extends MidgetArms {
+    constructor(x, y) {
+        super(x, y);
+
+        this.shoulderDistance = 80;
+        this.shoulderLevel = 129;
+    }
+
     createArms(context, parentContainer) {
         this.armsCont = context.add.container(28, 0);
         this.leftArmCont = context.add.container(0, 0);
@@ -11,7 +19,10 @@ class BigMidgetArms extends MidgetArms {
         this.rightArm = context.add.image(0, 0, 'midget-big-arm-right', 0).setOrigin(0);
         this.rightArmCont.add(this.rightArm);
         this.armsCont.add([this.leftArmCont, this.rightArmCont]);
+
         parentContainer.add(this.armsCont);
+        changeContainerOrigin(this.leftArmCont, { x: 75, y: 129 });
+        changeContainerOrigin(this.rightArmCont, { x: 41, y: 129 });
     }
 
     createGrips(context) {
@@ -27,7 +38,9 @@ class BigMidgetArms extends MidgetArms {
         this.rightGripCont.add(this.rightGrip);
         this.gripsCont.add([this.leftGripCont, this.rightGripCont]);
 
-        this.globalGripsCont.add(this.gripsCont); 
+        this.globalGripsCont.add(this.gripsCont);
+        changeContainerOrigin(this.leftGripCont, { x: 75, y: 129 });
+        changeContainerOrigin(this.rightGripCont, { x: 41, y: 129 });
     }
 }
 

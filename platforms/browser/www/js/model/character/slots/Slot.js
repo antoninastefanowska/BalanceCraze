@@ -16,8 +16,8 @@ class Slot {
         };
         this.angle = 0;
         this.weight = 0;
-        this.midgets = [];
         this.size = 0;
+        this.midgets = [];
     }
 
     static get LEFT_SLOT_1() {
@@ -79,8 +79,10 @@ class Slot {
         midget.changePosition(x, y);
         if (this.size > 0)
             midget.changeArms2();
-        else
+        else {
             midget.changeArms1();
+            midget.changeArmsAngle(this.getAngle());
+        }
         this.size += midget.getHeight() - 55;
         this.weight += midget.getWeight();
     }

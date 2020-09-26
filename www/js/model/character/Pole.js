@@ -142,7 +142,6 @@ class Pole {
         let denominator = D * (CHARACTER_FORCE + weight1 + weight2 + weight3 + weight4 + weight5 + weight6 + weight7 + weight8);
         let value = (rightTorque1 + rightTorque2 + rightTorque3 + rightTorque4 - leftTorque1 - leftTorque2 - leftTorque3 - leftTorque4) / denominator;
         this.angle = Math.atan(value);
-        console.log(this.angle);
     }
 
     updateRotation(context) {
@@ -158,7 +157,6 @@ class Pole {
                 poleAngle = sign * FIRST_ANGLE;
                 torsoAngle = sign * SECOND_ANGLE;
                 bodyAngle = (Math.abs(this.angle) - SECOND_ANGLE) * sign;
-                
             } else {
                 poleAngle = sign * FIRST_ANGLE;
                 torsoAngle = (Math.abs(this.angle) - FIRST_ANGLE) * sign;

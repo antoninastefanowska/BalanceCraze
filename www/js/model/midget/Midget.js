@@ -51,15 +51,15 @@ class Midget {
 
     create(context) {
         this.container = context.add.container(this.x, this.y);
-        this.twinContainer = context.add.container(this.x, this.y);
+        this.frontContainer = context.add.container(this.x, this.y);
 
         this.head = new MidgetHead();
         this.arms = new MidgetArms(this.x, this.y);
         this.head.createHat(context, this.container);
         this.arms.createArms(context, this.container);
         
-        this.bodyCont = context.add.container(16, 87);
-        this.twinBodyCont = context.add.container(16, 87);
+        this.fullLegsCont = context.add.container(16, 87);
+        this.frontBodyCont = context.add.container(16, 87);
 
         this.legsCont = context.add.container(55, 83);
         this.leftLeg = context.add.image(0, 0, 'midget-leg-left').setOrigin(0);
@@ -68,17 +68,17 @@ class Midget {
 
         this.torsoCont = context.add.container(0, 17);
         this.torso = context.add.image(52, 0, 'midget-body').setOrigin(0);
-        this.skirt = context.add.image(0, 62, 'midget-skirt').setOrigin(0);
+        this.skirt = context.add.image(25, 62, 'midget-skirt').setOrigin(0);
         this.torsoCont.add([this.torso, this.skirt]);
 
-        this.scarf = context.add.image(11, 0, 'midget-scarf').setOrigin(0);
-        this.bodyCont.add(this.legsCont);
-        this.twinBodyCont.add([this.torsoCont, this.scarf]);
+        this.scarf = context.add.image(31, 0, 'midget-scarf').setOrigin(0);
+        this.fullLegsCont.add(this.legsCont);
+        this.frontBodyCont.add([this.torsoCont, this.scarf]);
 
-        this.container.add(this.bodyCont);
-        this.twinContainer.add(this.twinBodyCont);
+        this.container.add(this.fullLegsCont);
+        this.frontContainer.add(this.frontBodyCont);
 
-        this.head.createHead(context, this.twinContainer);
+        this.head.createHead(context, this.frontContainer);
         this.arms.createGrips(context);
         
         this.updateColor();
@@ -97,32 +97,32 @@ class Midget {
     addToContainer(container, origin = { x: 0, y: 0 }) {
         this.arms.addGripsToContainer(container);
         container.add(this.container);
-        container.add(this.twinContainer);
+        container.add(this.frontContainer);
         container.sendToBack(this.container);
-        container.bringToTop(this.twinContainer);
+        container.bringToTop(this.frontContainer);
         this.offset = origin;
     }
 
     removeFromContainer(container) {
         this.arms.removeGripsFromContainer(container);
         container.remove(this.container);
-        container.remove(this.twinContainer);
+        container.remove(this.frontContainer);
     }
 
     hide() {
         this.arms.hide();
         this.container.setActive(false).setVisible(false);
-        this.twinContainer.setActive(false).setVisible(false);
+        this.frontContainer.setActive(false).setVisible(false);
     }
 
     show() {
         this.arms.show();
         this.container.setActive(true).setVisible(true);
-        this.twinContainer.setActive(true).setVisible(true);
+        this.frontContainer.setActive(true).setVisible(true);
     }
 
     bringBodyToTop(container) {
-        container.bringToTop(this.twinContainer);
+        container.bringToTop(this.frontContainer);
     }
 
     updateColor() {
@@ -149,7 +149,7 @@ class Midget {
         this.x = x;
         this.y = y;
         this.container.setPosition(x - this.offset.x, y - this.offset.y);
-        this.twinContainer.setPosition(x - this.offset.x, y - this.offset.y);
+        this.frontContainer.setPosition(x - this.offset.x, y - this.offset.y);
         this.arms.changePosition(x - this.offset.x, y - this.offset.y);
     }
 
@@ -166,6 +166,10 @@ class Midget {
         this.torso.setPipeline(filterName);
         this.skirt.setPipeline(filterName);
         this.scarf.setPipeline(filterName);
+    }
+
+    changeArmsAngle(angle) {
+        this.arms.changeArmsAngle(angle);
     }
 
     getHeight() {

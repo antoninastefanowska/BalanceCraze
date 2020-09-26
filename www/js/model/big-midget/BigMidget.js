@@ -49,10 +49,10 @@ class BigMidget extends Midget {
 
         this.torsoCont = context.add.container(0, 16);
         this.torso = context.add.image(64, 0, 'midget-big-body').setOrigin(0);
-        this.skirt = context.add.image(0, 61, 'midget-big-skirt').setOrigin(0);
+        this.skirt = context.add.image(33, 61, 'midget-big-skirt').setOrigin(0);
         this.torsoCont.add([this.torso, this.skirt]);
 
-        this.scarf = context.add.image(28, 0, 'midget-big-scarf').setOrigin(0);
+        this.scarf = context.add.image(60, 0, 'midget-big-scarf').setOrigin(0);
         this.bodyCont.add(this.legsCont);
         this.twinBodyCont.add([this.torsoCont, this.scarf]);
 

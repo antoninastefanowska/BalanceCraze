@@ -7,6 +7,7 @@ class RightSlot3 extends Slot {
             x: 1847,
             y: 128
         };
+        this.angle = 0.12;
     }
 }
 

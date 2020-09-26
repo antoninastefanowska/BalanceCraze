@@ -68,10 +68,10 @@ class Midget {
 
         this.torsoCont = context.add.container(0, 17);
         this.torso = context.add.image(52, 0, 'midget-body').setOrigin(0);
-        this.skirt = context.add.image(0, 62, 'midget-skirt').setOrigin(0);
+        this.skirt = context.add.image(25, 62, 'midget-skirt').setOrigin(0);
         this.torsoCont.add([this.torso, this.skirt]);
 
-        this.scarf = context.add.image(11, 0, 'midget-scarf').setOrigin(0);
+        this.scarf = context.add.image(31, 0, 'midget-scarf').setOrigin(0);
         this.bodyCont.add(this.legsCont);
         this.twinBodyCont.add([this.torsoCont, this.scarf]);
 
@@ -166,6 +166,10 @@ class Midget {
         this.torso.setPipeline(filterName);
         this.skirt.setPipeline(filterName);
         this.scarf.setPipeline(filterName);
+    }
+
+    changeArmsAngle(angle) {
+        this.arms.changeArmsAngle(angle);
     }
 
     getHeight() {

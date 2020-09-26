@@ -74,7 +74,7 @@ class Character {
         this.skirtLeft4 = context.add.image(199, 1, 'skirt-left-4').setOrigin(0);
         this.skirtLeftCont.add([this.skirtLeft1, this.skirtLeft2, this.skirtLeft3, this.skirtLeft4]);
 
-        this.skirtRightCont = context.add.container(1229, 634);
+        this.skirtRightCont = context.add.container(1220, 634);
         this.skirtRight1 = context.add.image(23, 1, 'skirt-right-1').setOrigin(0);
         this.skirtRight2 = context.add.image(23, 1, 'skirt-right-2').setOrigin(0);
         this.skirtRight3 = context.add.image(8, 0, 'skirt-right-3').setOrigin(0);

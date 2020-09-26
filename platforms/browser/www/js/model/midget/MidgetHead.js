@@ -1,7 +1,7 @@
 class MidgetHead {
     createHat(context, parentContainer) {
         this.hatCont = context.add.container(0, 13);
-        this.hat = context.add.image(0, 0, 'midget-hat').setOrigin(0);
+        this.hat = context.add.image(19, 0, 'midget-hat').setOrigin(0);
         this.hatCont.add(this.hat);
         parentContainer.add(this.hatCont);
     }
