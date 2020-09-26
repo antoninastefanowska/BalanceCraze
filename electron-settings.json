@@ -1,5 +1,8 @@
 {
     "browserWindow": {
-        "autoHideMenuBar": true
+        "autoHideMenuBar": true,
+        "webPreferences": {
+            "devTools": false
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { changeContainerOrigin } from '../../Utils';
+import { changeContainerOrigin, STEP_DURATION } from '../../Utils';
 import Slot from './slots/Slot';
 import LeftSlot1 from './slots/LeftSlot1';
 import LeftSlot2 from './slots/LeftSlot2';
@@ -16,8 +16,13 @@ const L3 = 814;
 const L4 = 1015;
 const CHARACTER_FORCE = 5000;
 
+const TILT_DURATION = 1000;
+const FIRST_ANGLE = 0.05;
+const SECOND_ANGLE = 0.2;
+const LAST_ANGLE = 0.5;
+
 class Pole {
-    constructor() {
+    constructor(character) {
         this.leftSlot1 = new LeftSlot1();
         this.leftSlot2 = new LeftSlot2();
         this.leftSlot3 = new LeftSlot3();
@@ -29,33 +34,42 @@ class Pole {
         this.rightSlot4 = new RightSlot4();
 
         this.angle = 0;
+
         this.origin = {
             x: 0,
             y: 0
         };
+
+        this.character = character;
     }
 
     createArms(context, parentContainer) {
-        this.armsCont = context.add.container(0, 380);
+        this.twinArmsCont = context.add.container(0, 380);
+        this.armsCont = context.add.container(0, 0);
         this.arms = context.add.image(993, 0, 'arms').setOrigin(0);
         this.armsCont.add(this.arms);
-        parentContainer.add(this.armsCont);
+        this.twinArmsCont.add(this.armsCont);
+        parentContainer.add(this.twinArmsCont);
         changeContainerOrigin(this.armsCont, { x: 1141, y: 0 });
+        changeContainerOrigin(this.twinArmsCont, { x: 1141, y: 0 });
     }
 
-    createPole(context, parentContainer) {  
-        this.poleCont = context.add.container(0, 380);
+    createPole(context, parentContainer) {
+        this.twinPoleCont = context.add.container(0, 380);
+        this.poleCont = context.add.container(0, 0);
         this.pole = context.add.image(0, 93, 'pole').setOrigin(0);
         this.poleCont.add(this.pole);
-        parentContainer.add(this.poleCont);
+        this.twinPoleCont.add(this.poleCont);
+        parentContainer.add(this.twinPoleCont);
         changeContainerOrigin(this.poleCont, { x: 1141, y: 0 });
+        changeContainerOrigin(this.twinPoleCont, { x: 1141, y: 0 });
         this.origin = {
             x: 1141,
             y: 0
         };
     }
 
-    addMidgetToSlot(midget, spotType) {
+    addMidgetToSlot(midget, spotType, context) {
         let slot;
         switch (spotType) {
             case Slot.LEFT_SLOT_1:
@@ -101,7 +115,7 @@ class Pole {
         }
 
         this.calculateAngle();
-        this.updateRotation();
+        this.updateRotation(context);
         return removed;
     }
 
@@ -131,9 +145,49 @@ class Pole {
         console.log(this.angle);
     }
 
-    updateRotation() {
-        this.poleCont.setRotation(this.angle);
-        this.armsCont.setRotation(this.angle);
+    updateRotation(context) {
+        let poleAngle = this.angle;
+        let torsoAngle = 0;
+        let bodyAngle = 0;
+
+        let sign = poleAngle < 0 ? -1 : 1;
+        let absolutePoleAngle = Math.abs(poleAngle);
+
+        if (absolutePoleAngle > FIRST_ANGLE) {
+            if (absolutePoleAngle > SECOND_ANGLE) {
+                poleAngle = sign * FIRST_ANGLE;
+                torsoAngle = sign * SECOND_ANGLE;
+                bodyAngle = (Math.abs(this.angle) - SECOND_ANGLE) * sign;
+                
+            } else {
+                poleAngle = sign * FIRST_ANGLE;
+                torsoAngle = (Math.abs(this.angle) - FIRST_ANGLE) * sign;
+            }
+        }
+
+        context.tweens.add({
+            targets: [this.twinPoleCont, this.twinArmsCont],
+            rotation: poleAngle,
+            duration: TILT_DURATION,
+            ease: 'Elastic',
+            easeParams: [1.5, 0.3]
+        });
+
+        context.tweens.add({
+            targets: this.character.twinTorsoCont,
+            rotation: torsoAngle,
+            duration: TILT_DURATION,
+            ease: 'Elastic',
+            easeParams: [1.0, 0.3]
+        });
+
+        context.tweens.add({
+            targets: this.character.twinContainer,
+            rotation: bodyAngle,
+            duration: TILT_DURATION,
+            ease: 'Elastic',
+            easeParams: [1.0, 0.3]
+        });
     }
 }
 

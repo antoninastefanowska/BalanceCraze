@@ -130,7 +130,7 @@ class GameScene extends Phaser.Scene {
 
     onObjectClicked(pointer, gameObject) {     
         this.midget.removeFromContainer(this.swingCont);
-        let removed = this.character.addMidgetToSlot(this.midget, gameObject.spotType);
+        let removed = this.character.addMidgetToSlot(this.midget, gameObject.spotType, this);
         if (removed != null) {
             for (let removedMidget of removed) {
                 if (removedMidget.getType() == Midget.NORMAL)

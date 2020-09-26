@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { changeContainerOrigin, changeSpriteOrigin, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, BASE_PATH, STEP_DURATION } from '../../Utils';
 import Pole from './Pole';
 
 const MIN_EYES = 0;
@@ -10,7 +10,6 @@ const CLOSE_EYES = 4;
 const MIN_BLINK_INTERVAL = 1000;
 const MAX_BLINK_INTERVAL = 10000;
 
-const STEP_DURATION = 500;
 const BLINK_DURATION = 300;
 
 class Character {
@@ -53,35 +52,38 @@ class Character {
     create(context) {
         this.rope = context.add.sprite(1213, 642, 'rope').setOrigin(0);
 
-        this.container = context.add.container(102, 16);
+        this.twinContainer = context.add.container(102, 16);
+        this.container = context.add.container(0, 0);
 
-        this.bodyCont = context.add.container(804, 0);
-        this.pole = new Pole();
-        this.pole.createArms(context, this.container);
+        this.bodyCont = context.add.container(0, 0);
 
-        this.legCont = context.add.container(225, 607);
+        this.legCont = context.add.container(1029, 607);
         this.legLeft = context.add.image(0, 0, 'leg-left').setOrigin(0);
-        this.legRight = context.add.image(80, 6, 'leg-right').setOrigin(0);
+        this.legRight = context.add.image(75, -5, 'leg-right').setOrigin(0);
         this.legCont.add([this.legRight, this.legLeft]);
 
+        this.twinTorsoCont = context.add.container(0, 0);
         this.torsoCont = context.add.container(0, 0);
-        this.skirtLeftCont = context.add.container(0, 634);
+        this.pole = new Pole(this);
+        this.pole.createArms(context, this.torsoCont);
+
+        this.skirtLeftCont = context.add.container(804, 634);
         this.skirtLeft1 = context.add.image(0, 1, 'skirt-left-1').setOrigin(0);
         this.skirtLeft2 = context.add.image(78, 1, 'skirt-left-2').setOrigin(0);
         this.skirtLeft3 = context.add.image(170, 0, 'skirt-left-3').setOrigin(0);
         this.skirtLeft4 = context.add.image(199, 1, 'skirt-left-4').setOrigin(0);
         this.skirtLeftCont.add([this.skirtLeft1, this.skirtLeft2, this.skirtLeft3, this.skirtLeft4]);
 
-        this.skirtRightCont = context.add.container(425, 634);
+        this.skirtRightCont = context.add.container(1229, 634);
         this.skirtRight1 = context.add.image(23, 1, 'skirt-right-1').setOrigin(0);
         this.skirtRight2 = context.add.image(23, 1, 'skirt-right-2').setOrigin(0);
         this.skirtRight3 = context.add.image(8, 0, 'skirt-right-3').setOrigin(0);
         this.skirtRight4 = context.add.image(0, 1, 'skirt-right-4').setOrigin(0);
         this.skirtRightCont.add([this.skirtRight1, this.skirtRight2, this.skirtRight3, this.skirtRight4]);
 
-        this.torso = context.add.image(188, 262, 'body').setOrigin(0);
+        this.torso = context.add.image(992, 262, 'body').setOrigin(0);
 
-        this.headCont = context.add.container(45, 0);
+        this.headCont = context.add.container(849, 0);
         this.hatCont= context.add.container(0, 0);
         this.hatLeftBig = context.add.image(0, 7, 'hat-big-left').setOrigin(0);
         this.hatLeftSmall = context.add.image(4, 88, 'hat-small-left').setOrigin(0);
@@ -90,8 +92,10 @@ class Character {
         this.hatCont.add([this.hatLeftSmall, this.hatLeftBig, this.hatRightSmall, this.hatRightBig]);
 
         this.torsoCont.add([this.skirtLeftCont, this.skirtRightCont, this.torso, this.headCont]);
+        this.pole.createPole(context, this.torsoCont);
+        this.twinTorsoCont.add(this.torsoCont);
 
-        this.bodyCont.add([this.legCont, this.torsoCont]);
+        this.bodyCont.add([this.legCont, this.twinTorsoCont]);
 
         this.faceHairCont = context.add.container(167, 75);
         this.hairCont= context.add.container(31, 0);
@@ -107,12 +111,14 @@ class Character {
         this.faceHairCont.add([this.faceCont, this.hairCont]);
         this.headCont.add([this.hatCont, this.faceHairCont]);
 
-        this.container.add([this.bodyCont]);     
-        this.pole.createPole(context, this.container);
+        this.container.add([this.bodyCont]);
+        this.twinContainer.add(this.container);
 
         changeContainerOrigin(this.container, { x: 1141, y: 1127 });
-        changeContainerOrigin(this.torsoCont, { x: 334, y: 667 });
-        changeContainerOrigin(this.bodyCont, { x: 346, y: 1132 });
+        changeContainerOrigin(this.twinContainer, { x: 1141, y: 1127 });
+        changeContainerOrigin(this.twinTorsoCont, { x: 1138, y: 667 });
+        changeContainerOrigin(this.torsoCont, { x: 1138, y: 667 });
+        changeContainerOrigin(this.bodyCont, { x: 1153, y: 1132 });
         changeContainerOrigin(this.headCont, { x: 295, y: 325 });
         changeContainerOrigin(this.skirtLeftCont, { x: 230, y: 2 });
         changeContainerOrigin(this.skirtRightCont, { x: 24, y: 2 });
@@ -220,7 +226,7 @@ class Character {
             yoyo: true,
             loop: -1,
             ease: 'Sine.easeInOut'
-        });
+        }); 
 
         context.tweens.add({
             targets: this.bodyCont,
@@ -242,7 +248,7 @@ class Character {
 
         context.tweens.add({
             targets: [this.pole.armsCont, this.pole.poleCont],
-            x: { from: this.pole.armsCont.x - 25, to: this.pole.armsCont.x + 25 },
+            angle: { from: -7, to: 7 },
             duration: STEP_DURATION,
             yoyo: true,
             loop: -1,
@@ -260,7 +266,7 @@ class Character {
 
         context.tweens.add({
             targets: [this.pole.armsCont, this.pole.poleCont],
-            y: { from: this.pole.armsCont.y - 5, to: this.pole.armsCont.y + 5 },
+            y: { from: this.pole.armsCont.y + 5, to: this.pole.armsCont.y - 5 },
             duration: STEP_DURATION / 2,
             yoyo: true,
             loop: -1,
@@ -449,8 +455,8 @@ class Character {
         });
     }
 
-    addMidgetToSlot(midget, spotType) {
-        return this.pole.addMidgetToSlot(midget, spotType);
+    addMidgetToSlot(midget, spotType, context) {
+        return this.pole.addMidgetToSlot(midget, spotType, context);
     }
 }
 
