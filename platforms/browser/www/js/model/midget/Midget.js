@@ -1,4 +1,4 @@
-import { changeContainerOrigin, changeSpriteOrigin, TILT_DURATION, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, scaleValue, TILT_DURATION, BASE_PATH } from '../../Utils';
 import MidgetHead from './MidgetHead';
 import MidgetArms from './MidgetArms';
 
@@ -88,9 +88,11 @@ class Midget {
         changeContainerOrigin(this.midBodyCont, { x: 123, y: 95 });
         changeContainerOrigin(this.frontBodyCont, { x: 123, y: 95 });
 
-        changeContainerOrigin(this.torsoCont, { x: 108, y: 18 });
+        changeContainerOrigin(this.torsoCont, { x: 108, y: 40 });
         changeSpriteOrigin(this.scarf, { x: 76, y: 12 });
         changeSpriteOrigin(this.head.hat, { x: 105, y: 7 });
+
+        changeContainerOrigin(this.legsCont, { x: 50, y: 13 });
         
         this.updateColor();
 
@@ -98,17 +100,13 @@ class Midget {
     }
 
     updateAnimation(progress) {
-        let torsoAngle = this.scale(progress, -10, 5);
+        let torsoAngle = scaleValue(progress, -15, 10);
         let scarfAngle = torsoAngle * (-1);
-        let hatScale = this.scale(progress, 1.0, 1.3);
+        let hatScale = scaleValue(progress, 1.0, 1.3);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);
         this.head.hat.setScale(1.0, hatScale);
-    }
-
-    scale(progress, a, b) {
-        return (b - a) * progress + a;
     }
 
     update() {
@@ -125,6 +123,11 @@ class Midget {
         container.add(this.frontContainer);
         container.sendToBack(this.container);
         container.bringToTop(this.frontContainer);
+    }
+
+    addToContainerAt(container, x, y) {
+        this.addToContainer(container);
+        this.changePosition(x, y);
     }
 
     addToDoubleContainer(backContainer, frontContainer) {
@@ -196,6 +199,10 @@ class Midget {
     }
 
     changePosition(x, y) {
+        this.changePositionWithoutOffset(x, y);
+    }
+
+    changePositionWithoutOffset(x, y) {
         this.x = x;
         this.y = y;
         this.container.setPosition(x, y);

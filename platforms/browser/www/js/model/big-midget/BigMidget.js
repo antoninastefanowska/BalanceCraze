@@ -1,4 +1,4 @@
-import { changeContainerOrigin, changeSpriteOrigin, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, scaleValue, BASE_PATH } from '../../Utils';
 import Midget from '../midget/Midget';
 import BigMidgetHead from './BigMidgetHead';
 import BigMidgetArms from './BigMidgetArms';
@@ -55,7 +55,7 @@ class BigMidget extends Midget {
         this.legsCont.add([this.leftLeg, this.rightLeg]);
         this.midBodyCont.add(this.legsCont);
 
-        this.torsoCont = context.add.container(0, 103);
+        this.torsoCont = context.add.container(0, 110);
         this.torso = context.add.image(64, 0, 'midget-big-body').setOrigin(0);
         this.skirt = context.add.image(33, 61, 'midget-big-skirt').setOrigin(0);
         this.torsoCont.add([this.torso, this.skirt]);
@@ -77,19 +77,19 @@ class BigMidget extends Midget {
         changeSpriteOrigin(this.scarf, { x: 83, y: 8 });
         changeSpriteOrigin(this.head.hat, { x: 140, y: 10 });
 
+        changeContainerOrigin(this.legsCont, { x: 60, y: 23 });
+
         this.updateColor();
     }
 
     updateAnimation(progress) {
-        let torsoAngle = this.scale(progress, -10, 5);
-        let scarfAngle = this.scale(progress, 0, 5) * (-1);
-        let hatScale = this.scale(progress, 1.0, 1.3);
-        let bowY = this.scale(progress, -2, 2);
+        let torsoAngle = scaleValue(progress, -15, 10);
+        let scarfAngle = scaleValue(progress, 0, 5) * (-1);
+        let hatScale = scaleValue(progress, 1.0, 1.3);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);
         this.head.hat.setScale(1.0, hatScale);
-        this.head.bow.setY(bowY);
     }
 
     getType() {

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { BASE_PATH } from '../Utils';
 import Character from '../model/character/Character';
+import Swing from '../model/Swing';
 import Slot from '../model/character/slots/Slot';
 import Midget from '../model/midget/Midget';
 import BigMidget from '../model/big-midget/BigMidget';
@@ -56,9 +57,9 @@ class GameScene extends Phaser.Scene {
 
     preload() {
         this.load.image('background', BASE_PATH + 'background2.png');
-        this.load.image('swing', BASE_PATH + 'swing.png');
         this.load.image('arrow', BASE_PATH + 'arrow.png');
 
+        Swing.load(this);
         Character.load(this);
         Midget.load(this);
         BigMidget.load(this);
@@ -103,43 +104,45 @@ class GameScene extends Phaser.Scene {
 
         this.input.on('gameobjectdown', this.onObjectClicked);
 
-        this.swingCont = this.add.container(55, -143);
-        this.swing = this.add.image(0, 0, 'swing').setOrigin(0);
-        this.swingCont.add(this.swing);
-        
+        debugger;
+
         this.character = new Character();
         this.character.create(this);
 
-        this.midgetGroup = this.add.group();
+        this.swing = new Swing();
+        this.swing.create(this);
 
         this.createNewMidget();
     }
 
     update() {
         this.character.updateAnimation();
+        this.swing.updateAnimation(this.character.getAnimationProgress());
     }
 
     createNewMidget() {
         let randomColor = Phaser.Math.Between(MIN_COLOR, MAX_COLOR);
         let chance = Phaser.Math.Between(0, 100);
+        let midget;
         if (chance <= BIG_MIDGET_CHANCE)
-            this.midget = new BigMidget(randomColor, -14, 226);
+            midget = new BigMidget(randomColor, -14, 226);
         else
-            this.midget = new Midget(randomColor, -14, 226);
-        this.midget.create(this);
-        this.midget.addToContainer(this.swingCont);
+            midget = new Midget(randomColor, -14, 226);
+        midget.create(this);
+        this.swing.setMidget(midget);
     }
 
     onObjectClicked(pointer, gameObject) {     
-        this.midget.removeFromContainer(this.swingCont);
-        let removed = this.character.addMidgetToSlot(this.midget, gameObject.spotType, this);
-        if (removed != null) {
-            for (let removedMidget of removed) {
-                if (removedMidget.getType() == Midget.NORMAL)
-                    this.midgetPool.push(removedMidget);
+        let midget = this.swing.removeMidget();
+
+        let cleared = this.character.addMidgetToSlot(midget, gameObject.spotType, this);
+        if (cleared != null) {
+            for (let clearedMidget of cleared) {
+                if (clearedMidget.getType() == Midget.NORMAL)
+                    this.midgetPool.push(clearedMidget);
                 else
-                    this.bigMidgetPool.push(removedMidget);
-                this.score += removedMidget.getWeight();
+                    this.bigMidgetPool.push(clearedMidget);
+                this.score += clearedMidget.getWeight();
             }
         }
         this.createNewMidget();

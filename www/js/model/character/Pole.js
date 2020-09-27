@@ -1,5 +1,4 @@
 import { changeContainerOrigin, TILT_DURATION } from '../../Utils';
-import Slot from './slots/Slot';
 import LeftSlot1 from './slots/LeftSlot1';
 import LeftSlot2 from './slots/LeftSlot2';
 import LeftSlot3 from './slots/LeftSlot3';
@@ -90,11 +89,11 @@ class Pole {
         
         slot.addMidget(midget);
 
-        let removed = slot.checkLastThree();
+        let cleared = slot.checkLastThree();
 
         this.calculateAngle();
         this.updateRotation(context);
-        return removed;
+        return cleared;
     }
 
     calculateAngle() {

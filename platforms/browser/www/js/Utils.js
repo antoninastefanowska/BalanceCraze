@@ -16,3 +16,7 @@ export function changeSpriteOrigin(sprite, origin) {
     sprite.setDisplayOrigin(origin.x, origin.y);
     sprite.setPosition(sprite.x + origin.x, sprite.y + origin.y);
 }
+
+export function scaleValue(value, a, b) {
+    return (b - a) * value + a;
+}
