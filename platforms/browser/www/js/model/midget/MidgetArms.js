@@ -78,8 +78,7 @@ class MidgetArms {
 
     changeArmsAngle(angle) {
         let value = parseInt((this.shoulderDistance / 2) * Math.tan(angle));
-        console.log(value);
-
+        
         this.leftArmCont.setY(this.shoulderLevel - value);
         this.leftGripCont.setY(this.shoulderLevel - value);
         this.rightArmCont.setY(this.shoulderLevel + value);

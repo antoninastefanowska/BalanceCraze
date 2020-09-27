@@ -1,4 +1,4 @@
-import { changeContainerOrigin, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, BASE_PATH } from '../../Utils';
 import Midget from '../midget/Midget';
 import BigMidgetHead from './BigMidgetHead';
 import BigMidgetArms from './BigMidgetArms';
@@ -73,7 +73,23 @@ class BigMidget extends Midget {
         changeContainerOrigin(this.midBodyCont, { x: 143, y: 105 });
         changeContainerOrigin(this.frontBodyCont, { x: 143, y: 105 });
 
+        changeContainerOrigin(this.torsoCont, { x: 144, y: 32 });
+        changeSpriteOrigin(this.scarf, { x: 83, y: 8 });
+        changeSpriteOrigin(this.head.hat, { x: 140, y: 10 });
+
         this.updateColor();
+    }
+
+    updateAnimation(progress) {
+        let torsoAngle = this.scale(progress, -10, 5);
+        let scarfAngle = this.scale(progress, 0, 5) * (-1);
+        let hatScale = this.scale(progress, 1.0, 1.3);
+        let bowY = this.scale(progress, -2, 2);
+
+        this.torsoCont.setAngle(torsoAngle);
+        this.scarf.setAngle(scarfAngle);
+        this.head.hat.setScale(1.0, hatScale);
+        this.head.bow.setY(bowY);
     }
 
     getType() {

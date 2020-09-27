@@ -239,7 +239,7 @@ class Character {
             ease: 'Sine.easeInOut'
         });
 
-        context.tweens.add({
+        this.torsoAnim = context.tweens.add({
             targets: this.torsoCont,
             angle: { from: 15, to: -15 },
             duration: STEP_DURATION,
@@ -440,6 +440,14 @@ class Character {
          }); 
     }
 
+    updateAnimation() {
+        for (let slot of this.pole.slots) {
+            for (let midget of slot.midgets) {
+                midget.updateAnimation(this.getAnimationProgress());
+            }
+        }
+    }
+
     getRandomEyes() {
         return Phaser.Math.Between(MIN_EYES, MAX_EYES);
     }
@@ -459,6 +467,10 @@ class Character {
 
     addMidgetToSlot(midget, spotType, context) {
         return this.pole.addMidgetToSlot(midget, spotType, context);
+    }
+
+    getAnimationProgress() {
+        return (this.torsoCont.angle + 15) / 30;
     }
 }
 

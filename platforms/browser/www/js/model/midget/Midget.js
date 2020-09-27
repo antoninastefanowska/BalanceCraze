@@ -1,4 +1,4 @@
-import { changeContainerOrigin, TILT_DURATION, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, TILT_DURATION, BASE_PATH } from '../../Utils';
 import MidgetHead from './MidgetHead';
 import MidgetArms from './MidgetArms';
 
@@ -87,10 +87,28 @@ class Midget {
         changeContainerOrigin(this.backBodyCont, { x: 123, y: 95 });
         changeContainerOrigin(this.midBodyCont, { x: 123, y: 95 });
         changeContainerOrigin(this.frontBodyCont, { x: 123, y: 95 });
+
+        changeContainerOrigin(this.torsoCont, { x: 108, y: 18 });
+        changeSpriteOrigin(this.scarf, { x: 76, y: 12 });
+        changeSpriteOrigin(this.head.hat, { x: 105, y: 7 });
         
         this.updateColor();
 
         //context.physics.world.enable(this.backBodyCont);
+    }
+
+    updateAnimation(progress) {
+        let torsoAngle = this.scale(progress, -10, 5);
+        let scarfAngle = torsoAngle * (-1);
+        let hatScale = this.scale(progress, 1.0, 1.3);
+
+        this.torsoCont.setAngle(torsoAngle);
+        this.scarf.setAngle(scarfAngle);
+        this.head.hat.setScale(1.0, hatScale);
+    }
+
+    scale(progress, a, b) {
+        return (b - a) * progress + a;
     }
 
     update() {

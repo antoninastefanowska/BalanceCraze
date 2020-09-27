@@ -110,15 +110,16 @@ class GameScene extends Phaser.Scene {
         this.character = new Character();
         this.character.create(this);
 
+        this.midgetGroup = this.add.group();
+
         this.createNewMidget();
     }
 
     update() {
-
+        this.character.updateAnimation();
     }
 
     createNewMidget() {
-        debugger;
         let randomColor = Phaser.Math.Between(MIN_COLOR, MAX_COLOR);
         let chance = Phaser.Math.Between(0, 100);
         if (chance <= BIG_MIDGET_CHANCE)
