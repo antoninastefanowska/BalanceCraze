@@ -52,6 +52,21 @@ class Slot {
         return RIGHT_SLOT_4;
     }
 
+    createContainer(context, parentContainer) {
+        this.backContainer = context.add.container(this.position.x, this.position.y);
+        this.frontContainer = context.add.container(this.position.x, this.position.y);
+        parentContainer.add([this.backContainer, this.frontContainer]);
+        parentContainer.sendToBack(this.backContainer);
+    }
+
+    getBackContainer() {
+        return this.backContainer;
+    }
+
+    getFrontContainer() {
+        return this.frontContainer;
+    }
+
     getPosition() {
         return this.position;
     }
@@ -68,21 +83,22 @@ class Slot {
         return this.midgets.length;
     }
 
+    getFirst() {
+        return this.midgets[0];
+    }
+
     getLast() {
         return this.midgets[this.getLength() - 1];
     }
 
     addMidget(midget) {
-        this.midgets.push(midget);
-        let x = this.position.x;
-        let y = this.position.y + this.size;
-        midget.changePosition(x, y);
-        if (this.size > 0)
+        if (this.getLength() > 0)
             midget.changeArms2();
         else {
             midget.changeArms1();
             midget.changeArmsAngle(this.getAngle());
         }
+        this.midgets.push(midget);
         this.size += midget.getHeight() - 55;
         this.weight += midget.getWeight();
     }
@@ -101,6 +117,18 @@ class Slot {
                 
                 this.weight -= removedWeight;
                 this.size -= removedSize;
+
+                lastMidget2.unchainAnother(lastMidget1);
+                lastMidget3.unchainAnother(lastMidget2);
+                if (this.getLast() != null)
+                    this.getLast().unchainAnother(lastMidget3);
+                else
+                    lastMidget3.removeFromDoubleContainer(this.backContainer, this.frontContainer);
+
+                lastMidget1.hide();
+                lastMidget2.hide();
+                lastMidget3.hide();
+
                 return removed;
             } else
                 return null;

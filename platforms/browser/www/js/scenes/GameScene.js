@@ -8,7 +8,7 @@ import BigMidget from '../model/big-midget/BigMidget';
 
 const MIN_COLOR = 0;
 const MAX_COLOR = 4;
-const BIG_MIDGET_CHANCE = 10;
+const BIG_MIDGET_CHANCE = 50;
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -118,6 +118,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createNewMidget() {
+        debugger;
         let randomColor = Phaser.Math.Between(MIN_COLOR, MAX_COLOR);
         let chance = Phaser.Math.Between(0, 100);
         if (chance <= BIG_MIDGET_CHANCE)

@@ -64,6 +64,10 @@ class MidgetArms {
         container.remove(this.globalGripsCont);
     }
 
+    sendGripsToBack(container) {
+        container.sendToBack(this.globalGripsCont);
+    }
+
     hide() {
         this.globalGripsCont.setActive(false).setVisible(false);
     }

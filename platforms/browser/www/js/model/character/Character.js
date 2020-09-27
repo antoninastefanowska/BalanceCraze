@@ -148,6 +148,8 @@ class Character {
         changeSpriteOrigin(this.eyes, { x: 124, y: 23 });
 
         this.legRight.setScale(1, 0.8);
+        this.legRight.setAngle(-1);
+        this.legLeft.setAngle(1);
 
         this.createAnimations(context);
     }
@@ -181,7 +183,7 @@ class Character {
         });
         this.legStep.add({
             targets: this.legRight,
-            angle: 0,
+            angle: -1,
             scaleY: 1,
             duration: STEP_DURATION / 2,
             ease: 'Expo.easeOut'
@@ -204,7 +206,7 @@ class Character {
         });
         this.legStep.add({
             targets: this.legLeft,
-            angle: 0,
+            angle: 1,
             scaleY: 1,
             duration: STEP_DURATION / 2,
             ease: 'Expo.easeOut'

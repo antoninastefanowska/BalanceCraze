@@ -1,4 +1,4 @@
-import { changeContainerOrigin, STEP_DURATION } from '../../Utils';
+import { changeContainerOrigin, TILT_DURATION } from '../../Utils';
 import Slot from './slots/Slot';
 import LeftSlot1 from './slots/LeftSlot1';
 import LeftSlot2 from './slots/LeftSlot2';
@@ -10,28 +10,26 @@ import RightSlot3 from './slots/RightSlot3';
 import RightSlot4 from './slots/RightSlot4';
 
 const D = 130;
-const L1 = 383;
-const L2 = 602;
-const L3 = 814;
-const L4 = 1015;
+const L = [383, 602, 814, 1015];
 const CHARACTER_FORCE = 5000;
 
-const TILT_DURATION = 1000;
 const FIRST_ANGLE = 0.05;
 const SECOND_ANGLE = 0.2;
 const LAST_ANGLE = 0.5;
 
 class Pole {
     constructor(character) {
-        this.leftSlot1 = new LeftSlot1();
-        this.leftSlot2 = new LeftSlot2();
-        this.leftSlot3 = new LeftSlot3();
-        this.leftSlot4 = new LeftSlot4();
+        this.slots = [];
+
+        this.slots.push(new LeftSlot1());
+        this.slots.push(new LeftSlot2());
+        this.slots.push(new LeftSlot3());
+        this.slots.push(new LeftSlot4());
         
-        this.rightSlot1 = new RightSlot1();
-        this.rightSlot2 = new RightSlot2();
-        this.rightSlot3 = new RightSlot3();
-        this.rightSlot4 = new RightSlot4();
+        this.slots.push(new RightSlot1());
+        this.slots.push(new RightSlot2());
+        this.slots.push(new RightSlot3());
+        this.slots.push(new RightSlot4());
 
         this.angle = 0;
 
@@ -61,58 +59,38 @@ class Pole {
         this.poleCont.add(this.pole);
         this.twinPoleCont.add(this.poleCont);
         parentContainer.add(this.twinPoleCont);
+
+        this.createContainers(context, this.poleCont);
+
         changeContainerOrigin(this.poleCont, { x: 1141, y: 0 });
         changeContainerOrigin(this.twinPoleCont, { x: 1141, y: 0 });
+
         this.origin = {
             x: 1141,
             y: 0
         };
     }
 
-    addMidgetToSlot(midget, spotType, context) {
-        let slot;
-        switch (spotType) {
-            case Slot.LEFT_SLOT_1:
-                slot = this.leftSlot1;
-                break;
-            case Slot.LEFT_SLOT_2:
-                slot = this.leftSlot2;
-                break;
-            case Slot.LEFT_SLOT_3:
-                slot = this.leftSlot3;
-                break;
-            case Slot.LEFT_SLOT_4:
-                slot = this.leftSlot4;
-                break;
-            case Slot.RIGHT_SLOT_1:
-                slot = this.rightSlot1;
-                break;
-            case Slot.RIGHT_SLOT_2:
-                slot = this.rightSlot2;
-                break;
-            case Slot.RIGHT_SLOT_3:
-                slot = this.rightSlot3;
-                break;
-            case Slot.RIGHT_SLOT_4:
-                slot = this.rightSlot4;
-                break;
+    createContainers(context, parentContainer) {
+        for (let slot of this.slots)
+            slot.createContainer(context, parentContainer);
+    }
+
+    addMidgetToSlot(midget, slotType, context) {
+        let slot = this.slots[slotType];
+
+        if (slot.getLength() > 0) {
+            let last = slot.getLast();
+            last.chainAnother(midget);
         }
-        midget.addToContainer(this.poleCont, this.origin);
-        if (slot.getLength() > 0)
-            slot.getLast().bringBodyToTop(this.poleCont);
+        else {
+            midget.changePosition(0, 0);
+            midget.addToDoubleContainer(slot.getBackContainer(), slot.getFrontContainer());
+        }
         
         slot.addMidget(midget);
-        let removed = slot.checkLastThree();
-        
-        if (removed != null) {          
-            removed[0].hide();
-            removed[1].hide();
-            removed[2].hide();
 
-            removed[0].removeFromContainer(this.poleCont);
-            removed[1].removeFromContainer(this.poleCont);
-            removed[2].removeFromContainer(this.poleCont);
-        }
+        let removed = slot.checkLastThree();
 
         this.calculateAngle();
         this.updateRotation(context);
@@ -120,27 +98,20 @@ class Pole {
     }
 
     calculateAngle() {
-        let weight1 = this.leftSlot1.getWeight();
-        let weight2 = this.leftSlot2.getWeight();
-        let weight3 = this.leftSlot3.getWeight();
-        let weight4 = this.leftSlot4.getWeight();
-        let weight5 = this.rightSlot1.getWeight();
-        let weight6 = this.rightSlot2.getWeight();
-        let weight7 = this.rightSlot3.getWeight();
-        let weight8 = this.rightSlot4.getWeight();
+        let leftTorque = 0, rightTorque = 0, weightSum = 0;
 
-        let leftTorque1 = weight1 * L1;
-        let leftTorque2 = weight2 * L2;
-        let leftTorque3 = weight3 * L3;
-        let leftTorque4 = weight4 * L4;
-        
-        let rightTorque1 = weight5 * L1;
-        let rightTorque2 = weight6 * L2;
-        let rightTorque3 = weight7 * L3;
-        let rightTorque4 = weight8 * L4;
+        for (let i = 0; i < 4; i++) {
+            let weight = this.slots[i].getWeight();
+            leftTorque += weight * L[i];
+            weightSum += weight;
+        }
+        for (let i = 4; i < 8; i++) {
+            let weight = this.slots[i].getWeight();
+            rightTorque += weight * L[i - 4];
+            weightSum += weight;
+        }
 
-        let denominator = D * (CHARACTER_FORCE + weight1 + weight2 + weight3 + weight4 + weight5 + weight6 + weight7 + weight8);
-        let value = (rightTorque1 + rightTorque2 + rightTorque3 + rightTorque4 - leftTorque1 - leftTorque2 - leftTorque3 - leftTorque4) / denominator;
+        let value = (rightTorque - leftTorque) / (D * (CHARACTER_FORCE + weightSum));
         this.angle = Math.atan(value);
     }
 
@@ -186,6 +157,11 @@ class Pole {
             ease: 'Elastic',
             easeParams: [1.0, 0.3]
         });
+
+        for (let slot of this.slots) {
+            if (slot.getLength() > 0)
+                slot.getFirst().rotateBody((-1) * this.angle, context);
+        }
     }
 }
 

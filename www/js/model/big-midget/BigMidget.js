@@ -1,4 +1,4 @@
-import { BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, BASE_PATH } from '../../Utils';
 import Midget from '../midget/Midget';
 import BigMidgetHead from './BigMidgetHead';
 import BigMidgetArms from './BigMidgetArms';
@@ -10,6 +10,10 @@ class BigMidget extends Midget {
         this.weight = 150;
         this.x = this.x - 21;
         this.y = this.y - 4;
+        this.chainPoint = {
+            x: -122,
+            y: 119
+        };
     }
 
     static load(context) {
@@ -32,35 +36,42 @@ class BigMidget extends Midget {
 
     create(context) {
         this.container = context.add.container(this.x, this.y);
-        this.twinContainer = context.add.container(this.x, this.y);
+        this.frontContainer = context.add.container(this.x, this.y);
+        
+        this.backBodyCont = context.add.container(0, 6);
+        this.midBodyCont = context.add.container(0, 6);
+        this.frontBodyCont = context.add.container(0, 6);
 
         this.head = new BigMidgetHead();
         this.arms = new BigMidgetArms(this.x, this.y);
-        this.head.createHat(context, this.container);
-        this.arms.createArms(context, this.container);
-        
-        this.bodyCont = context.add.container(0, 94);
-        this.twinBodyCont = context.add.container(0, 94);
 
-        this.legsCont = context.add.container(83, 80);
+        this.head.createHat(context, this.backBodyCont);
+        this.container.add(this.backBodyCont);
+        this.arms.createArms(context, this.container);
+
+        this.legsCont = context.add.container(83, 168);
         this.leftLeg = context.add.image(0, 0, 'midget-big-leg-left').setOrigin(0);
         this.rightLeg = context.add.image(47, 2, 'midget-big-leg-right').setOrigin(0);
         this.legsCont.add([this.leftLeg, this.rightLeg]);
+        this.midBodyCont.add(this.legsCont);
 
-        this.torsoCont = context.add.container(0, 16);
+        this.torsoCont = context.add.container(0, 103);
         this.torso = context.add.image(64, 0, 'midget-big-body').setOrigin(0);
         this.skirt = context.add.image(33, 61, 'midget-big-skirt').setOrigin(0);
         this.torsoCont.add([this.torso, this.skirt]);
 
-        this.scarf = context.add.image(60, 0, 'midget-big-scarf').setOrigin(0);
-        this.bodyCont.add(this.legsCont);
-        this.twinBodyCont.add([this.torsoCont, this.scarf]);
+        this.scarf = context.add.image(60, 88, 'midget-big-scarf').setOrigin(0);
+        this.frontBodyCont.add([this.torsoCont, this.scarf]);
+        this.head.createHead(context, this.frontBodyCont);
 
-        this.container.add(this.bodyCont);
-        this.twinContainer.add(this.twinBodyCont);
-        
-        this.head.createHead(context, this.twinContainer);
+        this.container.add(this.midBodyCont);
+        this.frontContainer.add(this.frontBodyCont);
+
         this.arms.createGrips(context);
+
+        changeContainerOrigin(this.backBodyCont, { x: 143, y: 105 });
+        changeContainerOrigin(this.midBodyCont, { x: 143, y: 105 });
+        changeContainerOrigin(this.frontBodyCont, { x: 143, y: 105 });
 
         this.updateColor();
     }
@@ -72,9 +83,9 @@ class BigMidget extends Midget {
     changePosition(x, y) {
         this.x = x - 21;
         this.y = y - 4;
-        this.container.setPosition(this.x - this.offset.x, this.y - this.offset.y);
-        this.twinContainer.setPosition(this.x - this.offset.x, this.y - this.offset.y);
-        this.arms.changePosition(this.x - this.offset.x, this.y - this.offset.y);
+        this.container.setPosition(this.x, this.y);
+        this.frontContainer.setPosition(this.x, this.y);
+        this.arms.changePosition(this.x, this.y);
     }
 
     changeFace3() { }
