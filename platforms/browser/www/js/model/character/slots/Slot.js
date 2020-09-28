@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 const LEFT_SLOT_1 = 0;
 const LEFT_SLOT_2 = 1;
 const LEFT_SLOT_3 = 2;
@@ -18,6 +20,9 @@ class Slot {
         this.weight = 0;
         this.size = 0;
         this.midgets = [];
+        
+        this.matrix = new Phaser.GameObjects.Components.TransformMatrix();
+        this.parentMatrix = new Phaser.GameObjects.Components.TransformMatrix();
     }
 
     static get LEFT_SLOT_1() {
@@ -83,6 +88,10 @@ class Slot {
         return this.midgets.length;
     }
 
+    getSize() {
+        return this.size;
+    }
+
     getFirst() {
         return this.midgets[0];
     }
@@ -134,6 +143,16 @@ class Slot {
                 return null;
         } else
             return null;
+    }
+
+    getGlobalPosition() {
+        this.backContainer.getWorldTransformMatrix(this.matrix, this.parentMatrix);
+        let decomposed = this.matrix.decomposeMatrix();
+
+        return {
+            x: decomposed.translateX,
+            y: decomposed.translateY
+        };
     }
 }
 

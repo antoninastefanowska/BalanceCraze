@@ -1,6 +1,6 @@
 import { changeContainerOrigin, scaleValue, BASE_PATH } from '../Utils'
 
-// 105, 52
+const MOVE_DURATION = 300;
 
 class Swing {
     constructor() {
@@ -45,6 +45,30 @@ class Swing {
         midget.removeFromContainer(this.swingCont);
         midget.legsCont.setAngle(0);
         return midget;
+    }
+
+    async hideAway(context) {
+        return new Promise((resolve, reject) => {
+            context.tweens.add({
+                targets: this.swingCont,
+                y: this.swingCont.y - this.midget.getHeight() - 117,
+                duration: MOVE_DURATION,
+                ease: 'Sine.InOut',
+                onComplete: resolve
+            });
+        });
+    }
+
+    async showAgain(context) {
+        return new Promise((resolve, reject) => {
+            context.tweens.add({
+                targets: this.swingCont,
+                y: this.swingCont.y + this.midget.getHeight() + 117,
+                duration: MOVE_DURATION,
+                ease: 'Sine.InOut',
+                onComplete: resolve
+            });
+        });
     }
 }
 

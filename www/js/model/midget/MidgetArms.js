@@ -60,6 +60,10 @@ class MidgetArms {
         container.add(this.globalGripsCont);
     }
 
+    removeGripsFromCurrentContainer() {
+        this.globalGripsCont.parentContainer.remove(this.globalGripsCont);
+    }
+
     removeGripsFromContainer(container) {
         container.remove(this.globalGripsCont);
     }

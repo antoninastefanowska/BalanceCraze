@@ -22,7 +22,7 @@ class BigMidget extends Midget {
         context.load.image('midget-big-bow', BASE_PATH + 'midget-big-bow.png');
         context.load.spritesheet('midget-big-face', BASE_PATH + 'midget-big-face.png', { frameWidth: 64, frameHeight: 56 });
 
-        context.load.spritesheet('midget-big-arm-left', BASE_PATH + 'midget-big-arm-left.png', { frameWidth: 116, frameHeight: 139 });
+        context.load.spritesheet('midget-big-arm-left', BASE_PATH + 'midget-big-arm-left.png', { frameWidth: 115, frameHeight: 139 });
         context.load.spritesheet('midget-big-arm-right', BASE_PATH + 'midget-big-arm-right.png', { frameWidth: 121, frameHeight: 140 });
         context.load.spritesheet('midget-big-grip-left', BASE_PATH + 'midget-big-grip-left.png', { frameWidth: 55, frameHeight: 33 });
         context.load.spritesheet('midget-big-grip-right', BASE_PATH + 'midget-big-grip-right.png', { frameWidth: 58, frameHeight: 33 });
@@ -85,7 +85,7 @@ class BigMidget extends Midget {
     updateAnimation(progress) {
         let torsoAngle = scaleValue(progress, -15, 10);
         let scarfAngle = scaleValue(progress, 0, 5) * (-1);
-        let hatScale = scaleValue(progress, 1.0, 1.3);
+        let hatScale = scaleValue(progress, 1.0, 1.2);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);

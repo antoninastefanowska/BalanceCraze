@@ -102,9 +102,9 @@ class GameScene extends Phaser.Scene {
         this.rightArrow4.setInteractive();
         this.rightArrow4.spotType = Slot.RIGHT_SLOT_4;
 
-        this.input.on('gameobjectdown', this.onObjectClicked);
+        this.globalContainer = this.add.container(0, 0);
 
-        debugger;
+        this.input.on('gameobjectdown', this.onObjectClicked);
 
         this.character = new Character();
         this.character.create(this);
@@ -132,10 +132,14 @@ class GameScene extends Phaser.Scene {
         this.swing.setMidget(midget);
     }
 
-    onObjectClicked(pointer, gameObject) {     
+    async onObjectClicked(pointer, gameObject) {
+        await this.swing.hideAway(this);
         let midget = this.swing.removeMidget();
+        midget.addToContainer(this.globalContainer);
 
-        let cleared = this.character.addMidgetToSlot(midget, gameObject.spotType, this);
+        this.createNewMidget();
+
+        let cleared = await this.character.addMidgetToSlot(midget, gameObject.spotType, this);
         if (cleared != null) {
             for (let clearedMidget of cleared) {
                 if (clearedMidget.getType() == Midget.NORMAL)
@@ -145,7 +149,8 @@ class GameScene extends Phaser.Scene {
                 this.score += clearedMidget.getWeight();
             }
         }
-        this.createNewMidget();
+        
+        await this.swing.showAgain(this);
     }
 }
 

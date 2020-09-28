@@ -465,8 +465,8 @@ class Character {
         });
     }
 
-    addMidgetToSlot(midget, spotType, context) {
-        return this.pole.addMidgetToSlot(midget, spotType, context);
+    async addMidgetToSlot(midget, spotType, context) {
+        return await this.pole.addMidgetToSlot(midget, spotType, context);
     }
 
     getAnimationProgress() {

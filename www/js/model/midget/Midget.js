@@ -11,6 +11,8 @@ const ORANGE = 2;
 const YELLOW = 3;
 const GREEN = 4;
 
+const FALL_DURATION = 500;
+
 class Midget {
     constructor(color, x, y) {
         this.height = 283;
@@ -37,7 +39,7 @@ class Midget {
         context.load.image('midget-head', BASE_PATH + 'midget-head.png');
         context.load.spritesheet('midget-face', BASE_PATH + 'midget-face.png', { frameWidth: 58, frameHeight: 56 });
 
-        context.load.spritesheet('midget-arm-left', BASE_PATH + 'midget-arm-left.png', { frameWidth: 99, frameHeight: 130 });
+        context.load.spritesheet('midget-arm-left', BASE_PATH + 'midget-arm-left.png', { frameWidth: 98, frameHeight: 130 });
         context.load.spritesheet('midget-arm-right', BASE_PATH + 'midget-arm-right.png', { frameWidth: 99, frameHeight: 131 });
         context.load.spritesheet('midget-grip-left', BASE_PATH + 'midget-grip-left.png', { frameWidth: 50, frameHeight: 33 });
         context.load.spritesheet('midget-grip-right', BASE_PATH + 'midget-grip-right.png', { frameWidth: 49, frameHeight: 33 });
@@ -102,7 +104,7 @@ class Midget {
     updateAnimation(progress) {
         let torsoAngle = scaleValue(progress, -15, 10);
         let scarfAngle = torsoAngle * (-1);
-        let hatScale = scaleValue(progress, 1.0, 1.3);
+        let hatScale = scaleValue(progress, 1.0, 1.2);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);
@@ -140,6 +142,12 @@ class Midget {
         backContainer.remove(this.container);
         frontContainer.remove(this.frontContainer);
         this.arms.removeGripsFromContainer(frontContainer);
+    }
+
+    removeFromCurrentContainer() {
+        this.container.parentContainer.remove(this.container);
+        this.frontContainer.parentContainer.remove(this.frontContainer);
+        this.arms.removeGripsFromCurrentContainer();
     }
 
     chainAnother(midget) {
@@ -196,6 +204,18 @@ class Midget {
                 this.applyColorFilter('green-filter');
                 break;
         }
+    }
+
+    async fall(context, y) {
+        return new Promise((resolve, reject) => {
+            context.tweens.add({
+                targets: [this.container, this.frontContainer, this.arms.globalGripsCont],
+                y: y,
+                duration: FALL_DURATION,
+                ease: 'Quad.In',
+                onComplete: resolve
+            });
+        });
     }
 
     changePosition(x, y) {

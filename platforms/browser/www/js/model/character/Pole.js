@@ -75,24 +75,30 @@ class Pole {
             slot.createContainer(context, parentContainer);
     }
 
-    addMidgetToSlot(midget, slotType, context) {
+    async addMidgetToSlot(midget, slotType, context) {
         let slot = this.slots[slotType];
 
+        let position = slot.getGlobalPosition();
+        midget.changePosition(position.x, -midget.getHeight());
+        midget.changeArms3();
+
+        await midget.fall(context, position.y + slot.getSize());
+        
+        midget.removeFromContainer(context.globalContainer);
         if (slot.getLength() > 0) {
             let last = slot.getLast();
             last.chainAnother(midget);
-        }
-        else {
-            midget.changePosition(0, 0);
+        } else {
             midget.addToDoubleContainer(slot.getBackContainer(), slot.getFrontContainer());
-        }
-        
+            midget.changePosition(0, 0);
+        }            
+    
         slot.addMidget(midget);
-
         let cleared = slot.checkLastThree();
-
+    
         this.calculateAngle();
         this.updateRotation(context);
+
         return cleared;
     }
 
