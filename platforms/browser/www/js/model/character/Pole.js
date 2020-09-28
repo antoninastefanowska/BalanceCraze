@@ -1,4 +1,4 @@
-import { changeContainerOrigin, TILT_DURATION } from '../../Utils';
+import { changeContainerOrigin, TILT_DURATION, ART_HEIGHT } from '../../Utils';
 import LeftSlot1 from './slots/LeftSlot1';
 import LeftSlot2 from './slots/LeftSlot2';
 import LeftSlot3 from './slots/LeftSlot3';
@@ -95,6 +95,25 @@ class Pole {
     
         slot.addMidget(midget);
         let cleared = slot.checkLastThree();
+
+        if (cleared != null) {
+            cleared[1].unchainAnother(cleared[0]);
+            cleared[2].unchainAnother(cleared[1]);
+            if (slot.getLast() != null)
+                slot.getLast().unchainAnother(cleared[2]);
+            else
+                cleared[2].removeFromDoubleContainer(slot.backContainer, slot.frontContainer);
+
+            for (let i = 0; i < 3; i++) {
+                let position = cleared[i].getGlobalPosition();
+                cleared[i].addToContainerAt(context.globalContainer, position.x, position.y);
+                cleared[i].rotateBody(0, context);
+                cleared[i].changeArmsAngle(0);
+                cleared[i].changeFace2();
+                cleared[i].changeArms3();
+                cleared[i].fallAndHide(context, ART_HEIGHT + i * cleared[i].getHeight());
+            }
+        }
     
         this.calculateAngle();
         this.updateRotation(context);

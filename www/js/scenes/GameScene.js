@@ -69,6 +69,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.background = this.add.image(0, 0, 'background').setOrigin(0);
+        this.background.setScrollFactor(0);
 
         this.leftArrow1 = this.add.image(749, 189, 'arrow').setOrigin(0);
         this.leftArrow1.setInteractive();

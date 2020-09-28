@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import { getGlobalPosition } from '../../../Utils';
 
 const LEFT_SLOT_1 = 0;
 const LEFT_SLOT_2 = 1;
@@ -20,9 +20,6 @@ class Slot {
         this.weight = 0;
         this.size = 0;
         this.midgets = [];
-        
-        this.matrix = new Phaser.GameObjects.Components.TransformMatrix();
-        this.parentMatrix = new Phaser.GameObjects.Components.TransformMatrix();
     }
 
     static get LEFT_SLOT_1() {
@@ -127,17 +124,6 @@ class Slot {
                 this.weight -= removedWeight;
                 this.size -= removedSize;
 
-                lastMidget2.unchainAnother(lastMidget1);
-                lastMidget3.unchainAnother(lastMidget2);
-                if (this.getLast() != null)
-                    this.getLast().unchainAnother(lastMidget3);
-                else
-                    lastMidget3.removeFromDoubleContainer(this.backContainer, this.frontContainer);
-
-                lastMidget1.hide();
-                lastMidget2.hide();
-                lastMidget3.hide();
-
                 return removed;
             } else
                 return null;
@@ -146,13 +132,7 @@ class Slot {
     }
 
     getGlobalPosition() {
-        this.backContainer.getWorldTransformMatrix(this.matrix, this.parentMatrix);
-        let decomposed = this.matrix.decomposeMatrix();
-
-        return {
-            x: decomposed.translateX,
-            y: decomposed.translateY
-        };
+        return getGlobalPosition(this.backContainer);
     }
 }
 

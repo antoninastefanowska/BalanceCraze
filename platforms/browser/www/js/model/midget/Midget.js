@@ -1,4 +1,4 @@
-import { changeContainerOrigin, changeSpriteOrigin, scaleValue, TILT_DURATION, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, scaleValue, getGlobalPosition, TILT_DURATION, BASE_PATH } from '../../Utils';
 import MidgetHead from './MidgetHead';
 import MidgetArms from './MidgetArms';
 
@@ -206,7 +206,7 @@ class Midget {
         }
     }
 
-    async fall(context, y) {
+    async fall(context, y, onFallen) {
         return new Promise((resolve, reject) => {
             context.tweens.add({
                 targets: [this.container, this.frontContainer, this.arms.globalGripsCont],
@@ -215,6 +215,16 @@ class Midget {
                 ease: 'Quad.In',
                 onComplete: resolve
             });
+        });
+    }
+
+    fallAndHide(context, y) {
+        context.tweens.add({
+            targets: [this.container, this.frontContainer, this.arms.globalGripsCont],
+            y: y,
+            duration: FALL_DURATION,
+            ease: 'Quad.In',
+            onComplete: () => this.hide()
         });
     }
 
@@ -257,6 +267,10 @@ class Midget {
             ease: 'Elastic',
             easeParams: [1.0, 0.3]
         });
+    }
+
+    getGlobalPosition() {
+        return getGlobalPosition(this.container);
     }
 
     getHeight() {
