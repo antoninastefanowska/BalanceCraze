@@ -1,4 +1,4 @@
-import { changeContainerOrigin, changeSpriteOrigin, scaleValue, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, scaleValue, BASE_SPRITE_PATH } from '../../Utils';
 import Midget from '../midget/Midget';
 import BigMidgetHead from './BigMidgetHead';
 import BigMidgetArms from './BigMidgetArms';
@@ -17,21 +17,21 @@ class BigMidget extends Midget {
     }
 
     static load(context) {
-        context.load.image('midget-big-hat', BASE_PATH + 'midget-big-hat.png');
-        context.load.image('midget-big-head', BASE_PATH + 'midget-big-head.png');
-        context.load.image('midget-big-bow', BASE_PATH + 'midget-big-bow.png');
-        context.load.spritesheet('midget-big-face', BASE_PATH + 'midget-big-face.png', { frameWidth: 64, frameHeight: 56 });
+        context.load.image('midget-big-hat', BASE_SPRITE_PATH + 'midget-big-hat.png');
+        context.load.image('midget-big-head', BASE_SPRITE_PATH + 'midget-big-head.png');
+        context.load.image('midget-big-bow', BASE_SPRITE_PATH + 'midget-big-bow.png');
+        context.load.spritesheet('midget-big-face', BASE_SPRITE_PATH + 'midget-big-face.png', { frameWidth: 64, frameHeight: 56 });
 
-        context.load.spritesheet('midget-big-arm-left', BASE_PATH + 'midget-big-arm-left.png', { frameWidth: 115, frameHeight: 139 });
-        context.load.spritesheet('midget-big-arm-right', BASE_PATH + 'midget-big-arm-right.png', { frameWidth: 121, frameHeight: 140 });
-        context.load.spritesheet('midget-big-grip-left', BASE_PATH + 'midget-big-grip-left.png', { frameWidth: 55, frameHeight: 33 });
-        context.load.spritesheet('midget-big-grip-right', BASE_PATH + 'midget-big-grip-right.png', { frameWidth: 58, frameHeight: 33 });
+        context.load.spritesheet('midget-big-arm-left', BASE_SPRITE_PATH + 'midget-big-arm-left.png', { frameWidth: 115, frameHeight: 139 });
+        context.load.spritesheet('midget-big-arm-right', BASE_SPRITE_PATH + 'midget-big-arm-right.png', { frameWidth: 121, frameHeight: 140 });
+        context.load.spritesheet('midget-big-grip-left', BASE_SPRITE_PATH + 'midget-big-grip-left.png', { frameWidth: 55, frameHeight: 33 });
+        context.load.spritesheet('midget-big-grip-right', BASE_SPRITE_PATH + 'midget-big-grip-right.png', { frameWidth: 58, frameHeight: 33 });
 
-        context.load.image('midget-big-leg-left', BASE_PATH + 'midget-big-leg-left.png');
-        context.load.image('midget-big-leg-right', BASE_PATH + 'midget-big-leg-right.png');
-        context.load.image('midget-big-body', BASE_PATH + 'midget-big-body.png');
-        context.load.image('midget-big-skirt', BASE_PATH + 'midget-big-skirt.png');
-        context.load.image('midget-big-scarf', BASE_PATH + 'midget-big-scarf.png');
+        context.load.image('midget-big-leg-left', BASE_SPRITE_PATH + 'midget-big-leg-left.png');
+        context.load.image('midget-big-leg-right', BASE_SPRITE_PATH + 'midget-big-leg-right.png');
+        context.load.image('midget-big-body', BASE_SPRITE_PATH + 'midget-big-body.png');
+        context.load.image('midget-big-skirt', BASE_SPRITE_PATH + 'midget-big-skirt.png');
+        context.load.image('midget-big-scarf', BASE_SPRITE_PATH + 'midget-big-scarf.png');
     }
 
     create(context) {
@@ -83,13 +83,18 @@ class BigMidget extends Midget {
     }
 
     updateAnimation(progress) {
+        let progress2 = progress * 2;
+        progress2 = progress2 > 1.0 ? 1.0 - progress2 + 1.0 : progress2; 
+
         let torsoAngle = scaleValue(progress, -15, 10);
-        let scarfAngle = scaleValue(progress, 0, 5) * (-1);
-        let hatScale = scaleValue(progress, 1.0, 1.2);
+        let scarfAngle = -scaleValue(progress, 0, 5);
+        let hatScale = scaleValue(progress2, 1.0, 1.2);
+        let faceY = scaleValue(progress2, this.head.getFaceLevel() - 3, this.head.getFaceLevel() + 3);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);
         this.head.hat.setScale(1.0, hatScale);
+        this.head.faceCont.setY(faceY);
     }
 
     getType() {

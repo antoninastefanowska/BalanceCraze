@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import HSLAdjustPipelinePlugin from 'phaser3-rex-plugins/plugins/hsladjustpipeline-plugin';
 
 import { ART_HEIGHT, ART_WIDTH } from './Utils';
 import GameScene from './scenes/GameScene';
@@ -21,13 +20,6 @@ function onDeviceReady() {
             arcade: { 
                 debug: true
             }
-        },
-        plugins: {
-            global: [{
-                key: 'rexHSLAdjustPipeline',
-                plugin: HSLAdjustPipelinePlugin,
-                start: true
-            }]
         },
         scene: [ GameScene ]
     };

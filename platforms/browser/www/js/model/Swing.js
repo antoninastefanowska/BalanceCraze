@@ -1,4 +1,4 @@
-import { changeContainerOrigin, scaleValue, BASE_PATH } from '../Utils'
+import { changeContainerOrigin, scaleValue, BASE_SPRITE_PATH } from '../Utils'
 
 const MOVE_DURATION = 300;
 
@@ -12,7 +12,7 @@ class Swing {
     }
 
     static load(context) {
-        context.load.image('swing', BASE_PATH + 'swing.png');
+        context.load.image('swing', BASE_SPRITE_PATH + 'swing.png');
     }
 
     updateAnimation(progress) {

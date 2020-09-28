@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { changeContainerOrigin, changeSpriteOrigin, BASE_PATH, STEP_DURATION } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, BASE_SPRITE_PATH, STEP_DURATION } from '../../Utils';
 import Pole from './Pole';
 
 const MIN_EYES = 0;
@@ -18,35 +18,35 @@ class Character {
     }
 
     static load(context) {
-        context.load.spritesheet('rope', BASE_PATH + 'rope.png', { frameWidth: 53, frameHeight: 758 });
+        context.load.spritesheet('rope', BASE_SPRITE_PATH + 'rope.png', { frameWidth: 53, frameHeight: 758 });
 
-        context.load.image('head', BASE_PATH + 'head.png');
-        context.load.image('hat-big-left', BASE_PATH + 'hat-big-left.png');
-        context.load.image('hat-small-left', BASE_PATH + 'hat-small-left.png');
-        context.load.image('hat-big-right', BASE_PATH + 'hat-big-right.png');
-        context.load.image('hat-small-right', BASE_PATH + 'hat-small-right.png');
+        context.load.image('head', BASE_SPRITE_PATH + 'head.png');
+        context.load.image('hat-big-left', BASE_SPRITE_PATH + 'hat-big-left.png');
+        context.load.image('hat-small-left', BASE_SPRITE_PATH + 'hat-small-left.png');
+        context.load.image('hat-big-right', BASE_SPRITE_PATH + 'hat-big-right.png');
+        context.load.image('hat-small-right', BASE_SPRITE_PATH + 'hat-small-right.png');
 
-        context.load.image('bangs-left', BASE_PATH + 'bangs-left.png');
-        context.load.image('bangs-right', BASE_PATH + 'bangs-right.png');
-        context.load.spritesheet('eyes', BASE_PATH + 'eyes.png', { frameWidth: 243, frameHeight: 47 });
-        context.load.spritesheet('mouth', BASE_PATH + 'mouth.png', { frameWidth: 85, frameHeight: 24 });
+        context.load.image('bangs-left', BASE_SPRITE_PATH + 'bangs-left.png');
+        context.load.image('bangs-right', BASE_SPRITE_PATH + 'bangs-right.png');
+        context.load.spritesheet('eyes', BASE_SPRITE_PATH + 'eyes.png', { frameWidth: 243, frameHeight: 47 });
+        context.load.spritesheet('mouth', BASE_SPRITE_PATH + 'mouth.png', { frameWidth: 85, frameHeight: 24 });
 
-        context.load.image('arms', BASE_PATH + 'arms.png');
-        context.load.image('pole', BASE_PATH + 'pole.png');
+        context.load.image('arms', BASE_SPRITE_PATH + 'arms.png');
+        context.load.image('pole', BASE_SPRITE_PATH + 'pole.png');
 
-        context.load.image('skirt-left-1', BASE_PATH + 'skirt-left-1.png');
-        context.load.image('skirt-left-2', BASE_PATH + 'skirt-left-2.png');
-        context.load.image('skirt-left-3', BASE_PATH + 'skirt-left-3.png');
-        context.load.image('skirt-left-4', BASE_PATH + 'skirt-left-4.png');
+        context.load.image('skirt-left-1', BASE_SPRITE_PATH + 'skirt-left-1.png');
+        context.load.image('skirt-left-2', BASE_SPRITE_PATH + 'skirt-left-2.png');
+        context.load.image('skirt-left-3', BASE_SPRITE_PATH + 'skirt-left-3.png');
+        context.load.image('skirt-left-4', BASE_SPRITE_PATH + 'skirt-left-4.png');
 
-        context.load.image('skirt-right-1', BASE_PATH + 'skirt-right-1.png');
-        context.load.image('skirt-right-2', BASE_PATH + 'skirt-right-2.png');
-        context.load.image('skirt-right-3', BASE_PATH + 'skirt-right-3.png');
-        context.load.image('skirt-right-4', BASE_PATH + 'skirt-right-4.png');
+        context.load.image('skirt-right-1', BASE_SPRITE_PATH + 'skirt-right-1.png');
+        context.load.image('skirt-right-2', BASE_SPRITE_PATH + 'skirt-right-2.png');
+        context.load.image('skirt-right-3', BASE_SPRITE_PATH + 'skirt-right-3.png');
+        context.load.image('skirt-right-4', BASE_SPRITE_PATH + 'skirt-right-4.png');
 
-        context.load.image('leg-left', BASE_PATH + 'leg-left.png');
-        context.load.image('leg-right', BASE_PATH + 'leg-right.png');
-        context.load.image('body', BASE_PATH + 'body.png');
+        context.load.image('leg-left', BASE_SPRITE_PATH + 'leg-left.png');
+        context.load.image('leg-right', BASE_SPRITE_PATH + 'leg-right.png');
+        context.load.image('body', BASE_SPRITE_PATH + 'body.png');
     }
 
     create(context) {
@@ -113,6 +113,8 @@ class Character {
 
         this.container.add([this.bodyCont]);
         this.twinContainer.add(this.container);
+
+        context.globalContainer.add([this.rope, this.twinContainer]);
 
         changeContainerOrigin(this.container, { x: 1141, y: 1127 });
         changeContainerOrigin(this.twinContainer, { x: 1141, y: 1127 });
@@ -465,12 +467,20 @@ class Character {
         });
     }
 
-    async addMidgetToSlot(midget, spotType, context) {
-        return await this.pole.addMidgetToSlot(midget, spotType, context);
-    }
-
     getAnimationProgress() {
         return (this.torsoCont.angle + 15) / 30;
+    }
+
+    changeMouth1() {
+        this.mouth.setFrame(0);
+    }
+
+    changeMouth2() {
+        this.mouth.setFrame(1);
+    }
+
+    changeMouth3() {
+        this.mouth.setFrame(2);
     }
 }
 

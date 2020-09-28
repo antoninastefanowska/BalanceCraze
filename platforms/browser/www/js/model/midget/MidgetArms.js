@@ -56,6 +56,18 @@ class MidgetArms {
         this.rightGrip.setPipeline(filterName);
     }
 
+    addClickCallback(callback) {
+        this.leftArm.setInteractive();
+        this.rightArm.setInteractive();
+        this.leftGrip.setInteractive();
+        this.rightGrip.setInteractive();
+
+        this.leftArm.on('pointerdown', callback);
+        this.rightArm.on('pointerdown', callback);
+        this.leftGrip.on('pointerdown', callback);
+        this.rightGrip.on('pointerdown', callback);
+    }
+
     addGripsToContainer(container) {
         container.add(this.globalGripsCont);
     }

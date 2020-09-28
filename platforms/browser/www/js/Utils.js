@@ -3,7 +3,8 @@ import Phaser from 'phaser';
 export const ART_HEIGHT = 1400;
 export const ART_WIDTH = 2478;
 
-export const BASE_PATH = "img/sprites/";
+export const BASE_SPRITE_PATH = 'img/sprites/';
+export const BASE_GUI_PATH = 'img/gui/';
 
 export const STEP_DURATION = 500;
 export const TILT_DURATION = 1000;

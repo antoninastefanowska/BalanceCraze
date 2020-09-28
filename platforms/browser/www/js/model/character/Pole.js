@@ -1,4 +1,4 @@
-import { changeContainerOrigin, TILT_DURATION, ART_HEIGHT } from '../../Utils';
+import { changeContainerOrigin, TILT_DURATION } from '../../Utils';
 import LeftSlot1 from './slots/LeftSlot1';
 import LeftSlot2 from './slots/LeftSlot2';
 import LeftSlot3 from './slots/LeftSlot3';
@@ -16,19 +16,22 @@ const FIRST_ANGLE = 0.05;
 const SECOND_ANGLE = 0.2;
 const LAST_ANGLE = 0.5;
 
+const FIRST_FACE_ANGLE = 0.2;
+const SECOND_FACE_ANGLE = 0.4;
+
 class Pole {
     constructor(character) {
         this.slots = [];
 
-        this.slots.push(new LeftSlot1());
-        this.slots.push(new LeftSlot2());
-        this.slots.push(new LeftSlot3());
-        this.slots.push(new LeftSlot4());
+        this.slots.push(new LeftSlot1(this));
+        this.slots.push(new LeftSlot2(this));
+        this.slots.push(new LeftSlot3(this));
+        this.slots.push(new LeftSlot4(this));
         
-        this.slots.push(new RightSlot1());
-        this.slots.push(new RightSlot2());
-        this.slots.push(new RightSlot3());
-        this.slots.push(new RightSlot4());
+        this.slots.push(new RightSlot1(this));
+        this.slots.push(new RightSlot2(this));
+        this.slots.push(new RightSlot3(this));
+        this.slots.push(new RightSlot4(this));
 
         this.angle = 0;
 
@@ -38,6 +41,7 @@ class Pole {
         };
 
         this.character = character;
+        this.arrowsVisible = true;
     }
 
     createArms(context, parentContainer) {
@@ -59,7 +63,7 @@ class Pole {
         this.twinPoleCont.add(this.poleCont);
         parentContainer.add(this.twinPoleCont);
 
-        this.createContainers(context, this.poleCont);
+        this.createSlots(context, this.poleCont);
 
         changeContainerOrigin(this.poleCont, { x: 1141, y: 0 });
         changeContainerOrigin(this.twinPoleCont, { x: 1141, y: 0 });
@@ -70,55 +74,31 @@ class Pole {
         };
     }
 
-    createContainers(context, parentContainer) {
-        for (let slot of this.slots)
+    createSlots(context, parentContainer) {
+        for (let slot of this.slots) {
             slot.createContainer(context, parentContainer);
+            slot.createArrow(context);
+        }
     }
 
-    async addMidgetToSlot(midget, slotType, context) {
-        let slot = this.slots[slotType];
-
-        let position = slot.getGlobalPosition();
-        midget.changePosition(position.x, -midget.getHeight());
-        midget.changeArms3();
-
-        await midget.fall(context, position.y + slot.getSize());
-        
-        midget.removeFromContainer(context.globalContainer);
-        if (slot.getLength() > 0) {
-            let last = slot.getLast();
-            last.chainAnother(midget);
-        } else {
-            midget.addToDoubleContainer(slot.getBackContainer(), slot.getFrontContainer());
-            midget.changePosition(0, 0);
-        }            
-    
-        slot.addMidget(midget);
-        let cleared = slot.checkLastThree();
-
-        if (cleared != null) {
-            cleared[1].unchainAnother(cleared[0]);
-            cleared[2].unchainAnother(cleared[1]);
-            if (slot.getLast() != null)
-                slot.getLast().unchainAnother(cleared[2]);
-            else
-                cleared[2].removeFromDoubleContainer(slot.backContainer, slot.frontContainer);
-
-            for (let i = 0; i < 3; i++) {
-                let position = cleared[i].getGlobalPosition();
-                cleared[i].addToContainerAt(context.globalContainer, position.x, position.y);
-                cleared[i].rotateBody(0, context);
-                cleared[i].changeArmsAngle(0);
-                cleared[i].changeFace2();
-                cleared[i].changeArms3();
-                cleared[i].fallAndHide(context, ART_HEIGHT + i * cleared[i].getHeight());
-            }
+    removeArrows(context) {
+        if (this.arrowsVisible) {
+            let arrows = [];
+            for (let slot of this.slots)
+                arrows.push(slot.arrow);
+            context.tweens.add({
+                targets: arrows,
+                alpha: 0,
+                duration: 2000,
+                ease: 'Sine.InOut',
+                onComplete: () => {
+                    for (let arrow of arrows)
+                        arrow.destroy();
+                    context.textures.remove('arrow');
+                }
+            });
+            this.arrowsVisible = false;
         }
-    
-        this.calculateAngle();
-        this.updateRotation(context);
-
-        return cleared;
     }
 
     calculateAngle() {
@@ -158,6 +138,14 @@ class Pole {
             }
         }
 
+        if (absolutePoleAngle > FIRST_FACE_ANGLE) {
+            if (absolutePoleAngle > SECOND_FACE_ANGLE)
+                this.character.changeMouth3();
+            else
+                this.character.changeMouth2();
+        } else
+            this.character.changeMouth1();
+
         context.tweens.add({
             targets: [this.twinPoleCont, this.twinArmsCont],
             rotation: poleAngle,
@@ -184,7 +172,7 @@ class Pole {
 
         for (let slot of this.slots) {
             if (slot.getLength() > 0)
-                slot.getFirst().rotateBody((-1) * this.angle, context);
+                slot.getFirst().changeBodyAngle(-this.angle, context);
         }
     }
 }

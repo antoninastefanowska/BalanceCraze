@@ -1,4 +1,4 @@
-import { changeContainerOrigin, changeSpriteOrigin, scaleValue, getGlobalPosition, TILT_DURATION, BASE_PATH } from '../../Utils';
+import { changeContainerOrigin, changeSpriteOrigin, scaleValue, getGlobalPosition, TILT_DURATION, BASE_SPRITE_PATH } from '../../Utils';
 import MidgetHead from './MidgetHead';
 import MidgetArms from './MidgetArms';
 
@@ -35,20 +35,20 @@ class Midget {
     }
 
     static load(context) {
-        context.load.image('midget-hat', BASE_PATH + 'midget-hat.png');
-        context.load.image('midget-head', BASE_PATH + 'midget-head.png');
-        context.load.spritesheet('midget-face', BASE_PATH + 'midget-face.png', { frameWidth: 58, frameHeight: 56 });
+        context.load.image('midget-hat', BASE_SPRITE_PATH + 'midget-hat.png');
+        context.load.image('midget-head', BASE_SPRITE_PATH + 'midget-head.png');
+        context.load.spritesheet('midget-face', BASE_SPRITE_PATH + 'midget-face.png', { frameWidth: 58, frameHeight: 56 });
 
-        context.load.spritesheet('midget-arm-left', BASE_PATH + 'midget-arm-left.png', { frameWidth: 98, frameHeight: 130 });
-        context.load.spritesheet('midget-arm-right', BASE_PATH + 'midget-arm-right.png', { frameWidth: 99, frameHeight: 131 });
-        context.load.spritesheet('midget-grip-left', BASE_PATH + 'midget-grip-left.png', { frameWidth: 50, frameHeight: 33 });
-        context.load.spritesheet('midget-grip-right', BASE_PATH + 'midget-grip-right.png', { frameWidth: 49, frameHeight: 33 });
+        context.load.spritesheet('midget-arm-left', BASE_SPRITE_PATH + 'midget-arm-left.png', { frameWidth: 98, frameHeight: 130 });
+        context.load.spritesheet('midget-arm-right', BASE_SPRITE_PATH + 'midget-arm-right.png', { frameWidth: 99, frameHeight: 131 });
+        context.load.spritesheet('midget-grip-left', BASE_SPRITE_PATH + 'midget-grip-left.png', { frameWidth: 50, frameHeight: 33 });
+        context.load.spritesheet('midget-grip-right', BASE_SPRITE_PATH + 'midget-grip-right.png', { frameWidth: 49, frameHeight: 33 });
 
-        context.load.image('midget-leg-left', BASE_PATH + 'midget-leg-left.png');
-        context.load.image('midget-leg-right', BASE_PATH + 'midget-leg-right.png');
-        context.load.image('midget-body', BASE_PATH + 'midget-body.png');
-        context.load.image('midget-skirt', BASE_PATH + 'midget-skirt.png');
-        context.load.image('midget-scarf', BASE_PATH + 'midget-scarf.png');
+        context.load.image('midget-leg-left', BASE_SPRITE_PATH + 'midget-leg-left.png');
+        context.load.image('midget-leg-right', BASE_SPRITE_PATH + 'midget-leg-right.png');
+        context.load.image('midget-body', BASE_SPRITE_PATH + 'midget-body.png');
+        context.load.image('midget-skirt', BASE_SPRITE_PATH + 'midget-skirt.png');
+        context.load.image('midget-scarf', BASE_SPRITE_PATH + 'midget-scarf.png');
     }
 
     create(context) {
@@ -103,13 +103,18 @@ class Midget {
     }
 
     updateAnimation(progress) {
+        let progress2 = progress * 2;
+        progress2 = progress2 > 1.0 ? 1.0 - progress2 + 1.0 : progress2; 
+
         let torsoAngle = scaleValue(progress, -15, 10);
-        let scarfAngle = torsoAngle * (-1);
-        let hatScale = scaleValue(progress, 1.0, 1.2);
+        let scarfAngle = -torsoAngle;
+        let hatScale = scaleValue(progress2, 1.0, 1.2);
+        let faceY = scaleValue(progress2, this.head.getFaceLevel() - 3, this.head.getFaceLevel() + 3);
 
         this.torsoCont.setAngle(torsoAngle);
         this.scarf.setAngle(scarfAngle);
         this.head.hat.setScale(1.0, hatScale);
+        this.head.faceCont.setY(faceY);
     }
 
     getType() {
@@ -252,11 +257,28 @@ class Midget {
         this.scarf.setPipeline(filterName);
     }
 
+    addClickCallback(callback) {
+        this.head.addClickCallback(callback);
+        this.arms.addClickCallback(callback);
+
+        this.leftLeg.setInteractive();
+        this.rightLeg.setInteractive();
+        this.torso.setInteractive();
+        this.skirt.setInteractive();
+        this.scarf.setInteractive();
+
+        this.leftLeg.on('pointerdown', callback);
+        this.rightLeg.on('pointerdown', callback);
+        this.torso.on('pointerdown', callback);
+        this.skirt.on('pointerdown', callback);
+        this.scarf.on('pointerdown', callback);
+    }
+
     changeArmsAngle(angle) {
         this.arms.changeArmsAngle(angle);
     }
 
-    rotateBody(angle, context) {
+    changeBodyAngle(angle, context) {
         context.tweens.add({
             targets: [this.backBodyCont, this.midBodyCont, this.frontBodyCont],
             rotation: angle,
