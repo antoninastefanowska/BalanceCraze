@@ -68,6 +68,18 @@ class MidgetArms {
         this.rightGrip.on('pointerdown', callback);
     }
 
+    removeClickCallback() {
+        this.leftArm.removeAllListeners();
+        this.rightArm.removeAllListeners();
+        this.leftGrip.removeAllListeners();
+        this.rightGrip.removeAllListeners();
+
+        this.leftArm.disableInteractive();
+        this.rightArm.disableInteractive();
+        this.leftGrip.disableInteractive();
+        this.rightGrip.disableInteractive();
+    }
+
     addGripsToContainer(container) {
         container.add(this.globalGripsCont);
     }

@@ -17,9 +17,9 @@ class Swing {
 
     updateAnimation(progress) {
         let angle = scaleValue(progress, -10, 10);
-        let legAngle = scaleValue(progress, -40, 40);
-
         this.swingCont.setAngle(angle);
+        
+        let legAngle = scaleValue(progress, -40, 40);
 
         this.midget.updateAnimation(progress);
         this.midget.legsCont.setAngle(legAngle);

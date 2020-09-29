@@ -103,11 +103,26 @@ class GameScene extends Phaser.Scene {
         let randomColor = Phaser.Math.Between(MIN_COLOR, MAX_COLOR);
         let chance = Phaser.Math.Between(0, 100);
         let midget;
-        if (chance <= BIG_MIDGET_CHANCE)
-            midget = new BigMidget(randomColor, -14, 226);
-        else
-            midget = new Midget(randomColor, -14, 226);
-        midget.create(this);
+        if (chance <= BIG_MIDGET_CHANCE) {
+            if (this.bigMidgetPool.length > 0) {
+                midget = this.bigMidgetPool.pop();
+                midget.removeFromContainer(this.globalContainer);
+                midget.recycle(randomColor, -14, 226);
+            } else {
+                midget = new BigMidget(randomColor, -14, 226);
+                midget.create(this);
+            }
+        } else {
+            if (this.midgetPool.length > 0) {
+                midget = this.midgetPool.pop();
+                midget.removeFromContainer(this.globalContainer);
+                midget.recycle(randomColor, -14, 226);
+            } else { 
+                midget = new Midget(randomColor, -14, 226);
+                midget.create(this);
+            }
+        }
+
         this.swing.setMidget(midget);
     }
 

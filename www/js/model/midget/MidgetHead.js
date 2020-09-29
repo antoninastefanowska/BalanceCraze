@@ -38,6 +38,16 @@ class MidgetHead {
         this.face.on('pointerdown', callback);
     }
 
+    removeClickCallback() {
+        this.hat.removeAllListeners();
+        this.head.removeAllListeners();
+        this.face.removeAllListeners();
+
+        this.hat.disableInteractive();
+        this.head.disableInteractive();
+        this.face.disableInteractive();
+    }
+
     changeFace1() {
         this.face.setFrame(0);
     }

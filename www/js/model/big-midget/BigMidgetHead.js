@@ -28,6 +28,18 @@ class BigMidgetHead extends MidgetHead {
         super.applyColorFilter(filterName);
         this.bow.setPipeline(filterName);
     }
+
+    addClickCallback(callback) {
+        super.addClickCallback(callback);
+        this.bow.setInteractive();
+        this.bow.on('pointerdown', callback);
+    }
+
+    removeClickCallback(callback) {
+        super.removeClickCallback(callback);
+        this.bow.removeAllListeners();
+        this.bow.disableInteractive();
+    }
 }
 
 export default BigMidgetHead;

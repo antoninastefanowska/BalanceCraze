@@ -24,6 +24,7 @@ class Midget {
             x: -123,
             y: 125
         };
+        this.name = null;
     }
 
     static get NORMAL() {
@@ -274,6 +275,23 @@ class Midget {
         this.scarf.on('pointerdown', callback);
     }
 
+    removeClickCallback() {
+        this.head.removeClickCallback();
+        this.arms.removeClickCallback();
+
+        this.leftLeg.removeAllListeners();
+        this.rightLeg.removeAllListeners();
+        this.torso.removeAllListeners();
+        this.skirt.removeAllListeners();
+        this.scarf.removeAllListeners();
+
+        this.leftLeg.disableInteractive();
+        this.rightLeg.disableInteractive();
+        this.torso.disableInteractive();
+        this.skirt.disableInteractive();
+        this.scarf.disableInteractive();
+    }
+
     changeArmsAngle(angle) {
         this.arms.changeArmsAngle(angle);
     }
@@ -326,6 +344,16 @@ class Midget {
 
     changeFace3() {
         this.head.changeFace3();
+    }
+
+    recycle(color, x, y) {
+        this.changeArms1();
+        this.changeFace1();
+        this.changeColor(color);
+        this.updateColor();
+        this.changePosition(x, y);
+        this.removeClickCallback();
+        this.show();
     }
 }
 
