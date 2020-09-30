@@ -16,12 +16,6 @@ function onDeviceReady() {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH
         },
-        physics: {
-            default: 'arcade',
-            arcade: { 
-                debug: true
-            }
-        },
         clearBeforeRender: false,
         antiAlias: false,
         scene: [ GameScene ]

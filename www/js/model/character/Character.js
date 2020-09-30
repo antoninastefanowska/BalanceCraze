@@ -17,7 +17,7 @@ class Character {
         this.onRandomEvent = this.onRandomEvent.bind(this);
     }
 
-    static load(context) {
+    static loadAssets(context) {
         context.load.spritesheet('rope', BASE_SPRITE_PATH + 'rope.png', { frameWidth: 53, frameHeight: 758 });
 
         context.load.image('head', BASE_SPRITE_PATH + 'head.png');

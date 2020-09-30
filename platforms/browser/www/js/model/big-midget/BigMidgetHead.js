@@ -24,11 +24,6 @@ class BigMidgetHead extends MidgetHead {
         parentContainer.add(this.headCont);
     }
 
-    applyColorFilter(filterName) {
-        super.applyColorFilter(filterName);
-        this.bow.setPipeline(filterName);
-    }
-
     addClickCallback(callback) {
         super.addClickCallback(callback);
         this.bow.setInteractive();

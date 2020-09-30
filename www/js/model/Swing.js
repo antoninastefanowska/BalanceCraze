@@ -12,7 +12,7 @@ class Swing {
         this.level = -91;
     }
 
-    static load(context) {
+    static loadAssets(context) {
         context.load.image('swing', BASE_SPRITE_PATH + 'swing.png');
     }
 

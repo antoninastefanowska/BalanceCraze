@@ -24,8 +24,8 @@ class MidgetHead {
         return this.faceLevel;
     }
 
-    applyColorFilter(filterName) {
-        this.hat.setPipeline(filterName);
+    applyTint(color) {
+        this.hat.setTint(color);
     }
 
     addClickCallback(callback) {

@@ -7,6 +7,7 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
     let config = {
+        gameTitle: 'BalanceCraze',
         type: Phaser.WEBGL,
         parent: 'game',
         width: ART_WIDTH,
@@ -15,13 +16,6 @@ function onDeviceReady() {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH
         },
-        physics: {
-            default: 'arcade',
-            arcade: { 
-                debug: true
-            }
-        },
-        backgroundColor: Phaser.Display.Color.HexStringToColor('#993f3e'),
         clearBeforeRender: false,
         antiAlias: false,
         scene: [ GameScene ]

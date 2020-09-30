@@ -16,7 +16,7 @@ class BigMidget extends Midget {
         };
     }
 
-    static load(context) {
+    static loadAssets(context) {
         context.load.image('midget-big-hat', BASE_SPRITE_PATH + 'midget-big-hat.png');
         context.load.image('midget-big-head', BASE_SPRITE_PATH + 'midget-big-head.png');
         context.load.image('midget-big-bow', BASE_SPRITE_PATH + 'midget-big-bow.png');

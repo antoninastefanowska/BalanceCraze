@@ -49,11 +49,11 @@ class MidgetArms {
         this.globalGripsCont.setPosition(x, y);
     }
 
-    applyColorFilter(filterName) {
-        this.leftArm.setPipeline(filterName);
-        this.rightArm.setPipeline(filterName);
-        this.leftGrip.setPipeline(filterName);
-        this.rightGrip.setPipeline(filterName);
+    applyTint(color) {
+        this.leftArm.setTint(color);
+        this.rightArm.setTint(color);
+        this.leftGrip.setTint(color);
+        this.rightGrip.setTint(color);
     }
 
     addClickCallback(callback) {

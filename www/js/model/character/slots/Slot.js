@@ -16,7 +16,7 @@ class Slot {
         this.pole = pole;
     }
 
-    static load(context) {
+    static loadAssets(context) {
         context.load.spritesheet('arrow', BASE_GUI_PATH + 'arrows.png', { frameWidth: 154, frameHeight: 201 });
     }
 

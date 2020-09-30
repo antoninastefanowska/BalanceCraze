@@ -5,7 +5,7 @@ import MidgetArms from './MidgetArms';
 const NORMAL = 0;
 const BIG = 1;
 
-const FILTER_NAMES = ['blue-filter', 'purple-filter', 'orange-filter', 'yellow-filter', 'green-filter'];
+const COLORS = [0x5cd3ff, 0x6d5cff, 0xff885c, 0xfff55c, 0x5cffa3];
 
 const FALL_DURATION = 500;
 
@@ -30,7 +30,7 @@ class Midget {
         return BIG;
     }
 
-    static load(context) {
+    static loadAssets(context) {
         context.load.image('midget-hat', BASE_SPRITE_PATH + 'midget-hat.png');
         context.load.image('midget-head', BASE_SPRITE_PATH + 'midget-head.png');
         context.load.spritesheet('midget-face', BASE_SPRITE_PATH + 'midget-face.png', { frameWidth: 58, frameHeight: 56 });
@@ -93,9 +93,6 @@ class Midget {
         changeContainerOrigin(this.legsCont, { x: 50, y: 13 });
         
         this.updateColor();
-
-        //context.physics.world.enable(this.backBodyCont);
-        //this.container.body.setAngularVelocity(200);
     }
 
     updateAnimation(progress) {
@@ -179,7 +176,8 @@ class Midget {
     }
 
     updateColor() {
-        this.applyColorFilter(FILTER_NAMES[this.color]);
+        //this.applyColorFilter(FILTER_NAMES[this.color]);
+        this.applyTint(COLORS[this.color]);
     }
 
     async fall(context, y, onFallen) {
@@ -220,15 +218,15 @@ class Midget {
         this.color = color;
     }
 
-    applyColorFilter(filterName) {
-        this.head.applyColorFilter(filterName);
-        this.arms.applyColorFilter(filterName);
+    applyTint(color) {
+        this.head.applyTint(color);
+        this.arms.applyTint(color);
 
-        this.leftLeg.setPipeline(filterName);
-        this.rightLeg.setPipeline(filterName);
-        this.torso.setPipeline(filterName);
-        this.skirt.setPipeline(filterName);
-        this.scarf.setPipeline(filterName);
+        this.leftLeg.setTint(color);
+        this.rightLeg.setTint(color);
+        this.torso.setTint(color);
+        this.skirt.setTint(color);
+        this.scarf.setTint(color);
     }
 
     addClickCallback(callback) {
