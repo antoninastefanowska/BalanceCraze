@@ -3,8 +3,6 @@ import Phaser from 'phaser';
 import { getGlobalPosition, BASE_GUI_PATH, STEP_DURATION, ART_HEIGHT } from '../../../Utils';
 import Midget from '../../midget/Midget';
 
-var counter = 0;
-
 class Slot {
     constructor(pole) {
         this.position = {
@@ -49,7 +47,6 @@ class Slot {
     async onAddMidget(context) {
         await context.swing.hideAway(context);
         let midget = context.swing.removeMidget();
-        //console.log(midget.name);
         midget.addToContainer(context.globalContainer);
 
         context.createNewMidget();
@@ -133,7 +130,6 @@ class Slot {
                 context.midgetPool.push(cleared[i]);
             else
                 context.bigMidgetPool.push(cleared[i]);
-            cleared[i].name = counter++;
             context.score += cleared[i].getWeight();
         }
     }

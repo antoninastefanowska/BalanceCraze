@@ -9,6 +9,7 @@ class Swing {
             x: 105,
             y: 52
         };
+        this.level = -91;
     }
 
     static load(context) {
@@ -51,7 +52,7 @@ class Swing {
         return new Promise((resolve, reject) => {
             context.tweens.add({
                 targets: this.swingCont,
-                y: this.swingCont.y - this.midget.getHeight() - 117,
+                y: this.level - this.midget.getHeight() - 117,
                 duration: MOVE_DURATION,
                 ease: 'Sine.InOut',
                 onComplete: resolve
@@ -63,7 +64,7 @@ class Swing {
         return new Promise((resolve, reject) => {
             context.tweens.add({
                 targets: this.swingCont,
-                y: this.swingCont.y + this.midget.getHeight() + 117,
+                y: this.level,
                 duration: MOVE_DURATION,
                 ease: 'Sine.InOut',
                 onComplete: resolve

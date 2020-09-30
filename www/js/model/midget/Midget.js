@@ -5,11 +5,7 @@ import MidgetArms from './MidgetArms';
 const NORMAL = 0;
 const BIG = 1;
 
-const BLUE = 0;
-const PURPLE = 1;
-const ORANGE = 2;
-const YELLOW = 3;
-const GREEN = 4;
+const FILTER_NAMES = ['blue-filter', 'purple-filter', 'orange-filter', 'yellow-filter', 'green-filter'];
 
 const FALL_DURATION = 500;
 
@@ -146,12 +142,6 @@ class Midget {
         this.arms.removeGripsFromContainer(frontContainer);
     }
 
-    removeFromCurrentContainer() {
-        this.container.parentContainer.remove(this.container);
-        this.frontContainer.parentContainer.remove(this.frontContainer);
-        this.arms.removeGripsFromCurrentContainer();
-    }
-
     chainAnother(midget) {
         midget.changePosition(this.chainPoint.x, this.chainPoint.y);
         this.backBodyCont.add(midget.container);
@@ -189,23 +179,7 @@ class Midget {
     }
 
     updateColor() {
-        switch (this.color) {
-            case BLUE:
-                this.applyColorFilter('blue-filter');
-                break;
-            case PURPLE:
-                this.applyColorFilter('purple-filter');
-                break;
-            case ORANGE:
-                this.applyColorFilter('orange-filter');
-                break;
-            case YELLOW:
-                this.applyColorFilter('yellow-filter');
-                break;
-            case GREEN:
-                this.applyColorFilter('green-filter');
-                break;
-        }
+        this.applyColorFilter(FILTER_NAMES[this.color]);
     }
 
     async fall(context, y, onFallen) {

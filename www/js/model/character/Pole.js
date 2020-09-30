@@ -92,8 +92,10 @@ class Pole {
                 duration: 2000,
                 ease: 'Sine.InOut',
                 onComplete: () => {
-                    for (let arrow of arrows)
-                        arrow.destroy();
+                    for (let slot of this.slots) {
+                        slot.arrow.destroy();
+                        slot.arrow = null;
+                    }
                     context.textures.remove('arrow');
                 }
             });
@@ -115,7 +117,7 @@ class Pole {
             weightSum += weight;
         }
 
-        let value = (rightTorque - leftTorque) / (D * (CHARACTER_FORCE + weightSum));
+        let value = (rightTorque - leftTorque) / (D * (CHARACTER_FORCE - weightSum));
         this.angle = Math.atan(value);
     }
 
@@ -131,10 +133,10 @@ class Pole {
             if (absolutePoleAngle > SECOND_ANGLE) {
                 poleAngle = sign * FIRST_ANGLE;
                 torsoAngle = sign * SECOND_ANGLE;
-                bodyAngle = (Math.abs(this.angle) - SECOND_ANGLE) * sign;
+                bodyAngle = sign * (Math.abs(this.angle) - SECOND_ANGLE);
             } else {
                 poleAngle = sign * FIRST_ANGLE;
-                torsoAngle = (Math.abs(this.angle) - FIRST_ANGLE) * sign;
+                torsoAngle = sign * (Math.abs(this.angle) - FIRST_ANGLE);
             }
         }
 

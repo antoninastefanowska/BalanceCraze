@@ -471,6 +471,10 @@ class Character {
         return (this.torsoCont.angle + 15) / 30;
     }
 
+    getAnimationProgressWithoutYoyo() {
+        return this.torsoAnim.progress;
+    }
+
     changeMouth1() {
         this.mouth.setFrame(0);
     }

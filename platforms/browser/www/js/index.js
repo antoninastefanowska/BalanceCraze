@@ -21,6 +21,9 @@ function onDeviceReady() {
                 debug: true
             }
         },
+        backgroundColor: Phaser.Display.Color.HexStringToColor('#993f3e'),
+        clearBeforeRender: false,
+        antiAlias: false,
         scene: [ GameScene ]
     };
 

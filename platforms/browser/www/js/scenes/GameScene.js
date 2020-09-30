@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import HSLAdjustPipeline from 'phaser3-rex-plugins/plugins/hsladjustpipeline';
 import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components';
 
-import { BASE_SPRITE_PATH } from '../Utils';
+import { scaleValue, BASE_SPRITE_PATH, ART_WIDTH, ART_HEIGHT, STEP_DURATION } from '../Utils';
 
 import Character from '../model/character/Character';
 import Swing from '../model/Swing';
@@ -59,8 +59,6 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', BASE_SPRITE_PATH + 'background2.png');
-
         Swing.load(this);
         Character.load(this);
         Midget.load(this);
@@ -71,7 +69,8 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        this.background = this.add.image(0, 0, 'background').setOrigin(0);
+        //this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor('#993f3e');
+        this.createBackground();
 
         this.globalContainer = this.add.container(0, 0);
 
@@ -94,15 +93,68 @@ class GameScene extends Phaser.Scene {
         this.createNewMidget();
     }
 
+    createBackground() {
+        let shape1 = this.make.graphics();
+        let shape2 = this.make.graphics();
+
+        shape1.fillStyle(0xffffff);
+        shape1.fillRect(0, 0, ART_WIDTH / 2, ART_HEIGHT);
+
+        shape2.fillStyle(0xffffff);
+        shape2.fillRect(ART_WIDTH / 2, 0, ART_WIDTH / 2, ART_HEIGHT);
+
+        let mask1 = shape1.createGeometryMask();
+        let mask2 = shape2.createGeometryMask();
+
+        let rectColor = 0xc46a55;
+        let rectWidth = Math.sin(Phaser.Math.DegToRad(45)) * ART_WIDTH / 2;
+        let rectHeight = 3000;
+        let rectY = ART_HEIGHT;
+
+        this.rectangle1 = this.add.rectangle(0, rectY, rectWidth, rectHeight, rectColor).setOrigin(0, 1).setAngle(45);
+        this.rectangle2 = this.add.rectangle(-ART_WIDTH - 300, rectY, rectWidth, rectHeight, rectColor).setOrigin(0, 1).setAngle(45);
+        this.rectangle1.setMask(mask1);
+        this.rectangle2.setMask(mask1);
+
+        this.rectangle3 = this.add.rectangle(ART_WIDTH, rectY, rectWidth, rectHeight, rectColor).setOrigin(1, 1).setAngle(-45);
+        this.rectangle4 = this.add.rectangle(2 * ART_WIDTH + 300, rectY, rectWidth, rectHeight, rectColor).setOrigin(1, 1).setAngle(-45);
+        this.rectangle3.setMask(mask2);
+        this.rectangle4.setMask(mask2);
+
+        this.tweens.add({
+            targets: this.rectangle1,
+            x: { from: -ART_WIDTH - 300, to: ART_WIDTH },
+            duration: STEP_DURATION * 24,
+            repeat: -1
+        });
+        this.tweens.add({
+            targets: this.rectangle2,
+            x: { from: -ART_WIDTH - 300, to: ART_WIDTH },
+            duration: STEP_DURATION * 24,
+            delay: STEP_DURATION * 12,
+            repeat: -1
+        });
+        this.tweens.add({
+            targets: this.rectangle3,
+            x: { from: 2 * ART_WIDTH + 300, to: 0 },
+            duration: STEP_DURATION * 24,
+            repeat: -1
+        });
+        this.tweens.add({
+            targets: this.rectangle4,
+            x: { from: 2 * ART_WIDTH + 300, to: 0 },
+            duration: STEP_DURATION * 24,
+            delay: STEP_DURATION * 12,
+            repeat: -1
+        });
+    }
+
     update() {
         this.character.updateAnimation();
         this.swing.updateAnimation(this.character.getAnimationProgress());
     }
 
     createNewMidget() {
-        //console.log(this.midgetPool);
-        //console.log(this.bigMidgetPool);
-
         let randomColor = Phaser.Math.Between(MIN_COLOR, MAX_COLOR);
         let chance = Phaser.Math.Between(0, 100);
         let midget;

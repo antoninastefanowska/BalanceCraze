@@ -7,6 +7,7 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
     let config = {
+        gameTitle: 'BalanceCraze',
         type: Phaser.WEBGL,
         parent: 'game',
         width: ART_WIDTH,
@@ -21,6 +22,8 @@ function onDeviceReady() {
                 debug: true
             }
         },
+        clearBeforeRender: false,
+        antiAlias: false,
         scene: [ GameScene ]
     };
 
