@@ -35,6 +35,13 @@ class GameScene extends Phaser.Scene {
         this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor('#993f3e');
         this.createBackground();
 
+        this.scoreText = this.add.text(ART_WIDTH - 50, 0, this.score.toString(), {
+            fontFamily: 'Montserrat',
+            fontSize: '300px',
+            color: '#000',
+            align: 'right' 
+        }).setOrigin(1, 0).setAlpha(0.3);
+
         this.globalContainer = this.add.container(0, 0);
 
         this.character = new Character();
@@ -142,6 +149,19 @@ class GameScene extends Phaser.Scene {
         }
 
         this.swing.setMidget(midget);
+    }
+
+    addScore(value) {
+        let step = 10;
+        let repeats = Math.ceil(value / step) - 1;
+        this.time.addEvent({
+            delay: 5,
+            repeat: repeats,
+            callback: () => {
+                this.score += step;
+                this.scoreText.setText(this.score.toString());
+            }
+        });
     }
 
     onScroll(pointer, gameObjects, deltaX, deltaY, deltaZ) {

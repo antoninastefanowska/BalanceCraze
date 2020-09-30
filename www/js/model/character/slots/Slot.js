@@ -117,6 +117,7 @@ class Slot {
         else
             cleared[2].removeFromDoubleContainer(this.backContainer, this.frontContainer);
 
+        let score = 0;
         for (let i = 0; i < 3; i++) {
             let position = cleared[i].getGlobalPosition();
             cleared[i].addToContainerAt(context.globalContainer, position.x, position.y);
@@ -130,8 +131,9 @@ class Slot {
                 context.midgetPool.push(cleared[i]);
             else
                 context.bigMidgetPool.push(cleared[i]);
-            context.score += cleared[i].getWeight();
+            score += cleared[i].getWeight();
         }
+        context.addScore(score);
     }
 
     getBackContainer() {

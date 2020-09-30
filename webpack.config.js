@@ -16,7 +16,7 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(png|mp3)$/,
+        test: /\.(png|mp3|ttf)$/,
         exclude: /node_modules/,
         use: 'url-loader'
       }
