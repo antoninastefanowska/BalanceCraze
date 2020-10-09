@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components';
 
-import { ART_WIDTH, ART_HEIGHT, STEP_DURATION } from '../Utils';
+import { ART_WIDTH, ART_HEIGHT, STEP_DURATION, BASE_GUI_PATH } from '../Utils';
 
 import Character from '../model/character/Character';
 import Swing from '../model/Swing';
@@ -29,6 +29,8 @@ class GameScene extends Phaser.Scene {
         Midget.loadAssets(this);
         BigMidget.loadAssets(this);
         Slot.loadAssets(this);
+
+        this.load.spritesheet('star', BASE_GUI_PATH + 'stars.png', { frameWidth: 165, frameHeight: 159 });
     }
 
     create() {
@@ -42,6 +44,7 @@ class GameScene extends Phaser.Scene {
             align: 'right' 
         }).setOrigin(1, 0).setAlpha(0.3);
 
+        this.particlesContainer = this.add.container(0, 0);
         this.globalContainer = this.add.container(0, 0);
 
         this.character = new Character();

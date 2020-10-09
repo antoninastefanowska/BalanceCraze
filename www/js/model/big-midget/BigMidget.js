@@ -7,6 +7,7 @@ class BigMidget extends Midget {
     constructor(color, x, y) {
         super(color, x, y);
         this.height = 287;
+        this.width = 220;
         this.weight = 150;
         this.x = this.x - 21;
         this.y = this.y - 4;

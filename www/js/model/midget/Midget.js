@@ -12,6 +12,7 @@ const FALL_DURATION = 500;
 class Midget {
     constructor(color, x, y) {
         this.height = 283;
+        this.width = 193;
         this.weight = 50;
         this.color = color;
         this.x = x;
@@ -176,7 +177,6 @@ class Midget {
     }
 
     updateColor() {
-        //this.applyColorFilter(FILTER_NAMES[this.color]);
         this.applyTint(COLORS[this.color]);
     }
 
@@ -283,6 +283,10 @@ class Midget {
 
     getHeight() {
         return this.height;
+    }
+
+    getWidth() {
+        return this.width;
     }
 
     getWeight() {

@@ -56,13 +56,14 @@ class Pole {
     }
 
     createPole(context, parentContainer) {
+        this.createEmitter(context);
+
         this.twinPoleCont = context.add.container(0, 380);
         this.poleCont = context.add.container(0, 0);
         this.pole = context.add.image(0, 93, 'pole').setOrigin(0);
         this.poleCont.add(this.pole);
         this.twinPoleCont.add(this.poleCont);
         parentContainer.add(this.twinPoleCont);
-
         this.createSlots(context, this.poleCont);
 
         changeContainerOrigin(this.poleCont, { x: 1141, y: 0 });
@@ -79,6 +80,31 @@ class Pole {
             slot.createContainer(context, parentContainer);
             slot.createArrow(context);
         }
+    }
+
+    createEmitter(context) {
+        this.particles = context.add.particles('star');
+        this.emitter = this.particles.createEmitter({
+            frame: [0, 1, 2, 3],
+            speed: {
+                min: 100,
+                max: 400
+            },
+            lifespan: 1000,
+            alpha: {
+                start: 1,
+                end: 0,
+                ease: 'Sine.InOut'
+            },
+            rotate: {
+                start: 0,
+                end: 360,
+                ease: 'Sine.InOut'
+            },
+            frequency: -1,
+            blendMode: 'ADD'
+        });
+        context.particlesContainer.add(this.particles);
     }
 
     removeArrows(context) {

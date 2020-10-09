@@ -117,9 +117,12 @@ class Slot {
         else
             cleared[2].removeFromDoubleContainer(this.backContainer, this.frontContainer);
 
+        let position = cleared[0].getGlobalPosition();
+        this.pole.emitter.explode(30, position.x + cleared[0].getWidth() / 2, position.y + cleared[0].getHeight() / 2);
+
         let score = 0;
         for (let i = 0; i < 3; i++) {
-            let position = cleared[i].getGlobalPosition();
+            position = cleared[i].getGlobalPosition();
             cleared[i].addToContainerAt(context.globalContainer, position.x, position.y);
             cleared[i].changeBodyAngle(0, context);
             cleared[i].changeArmsAngle(0);
