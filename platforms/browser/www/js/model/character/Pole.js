@@ -86,11 +86,11 @@ class Pole {
         this.particles = context.add.particles('star');
         this.emitter = this.particles.createEmitter({
             frame: [0, 1, 2, 3],
+            lifespan: 1000,
             speed: {
                 min: 100,
                 max: 400
             },
-            lifespan: 1000,
             alpha: {
                 start: 1,
                 end: 0,
@@ -202,6 +202,16 @@ class Pole {
             if (slot.getLength() > 0)
                 slot.getFirst().changeBodyAngle(-this.angle, context);
         }
+    }
+
+    getLowestPoint(scrollY = 0) {
+        let max = 0;
+        for (let slot of this.slots) {
+            let y = slot.getLowestPoint(scrollY).y;
+            if (y > max)
+                max = y;
+        }
+        return max;
     }
 }
 

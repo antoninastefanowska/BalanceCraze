@@ -177,7 +177,6 @@ class Midget {
     }
 
     updateColor() {
-        //this.applyColorFilter(FILTER_NAMES[this.color]);
         this.applyTint(COLORS[this.color]);
     }
 
@@ -278,8 +277,10 @@ class Midget {
         });
     }
 
-    getGlobalPosition() {
-        return getGlobalPosition(this.container);
+    getGlobalPosition(scrollY = 0) {
+        let position = getGlobalPosition(this.container);
+        position.y -= scrollY;
+        return position;
     }
 
     getHeight() {

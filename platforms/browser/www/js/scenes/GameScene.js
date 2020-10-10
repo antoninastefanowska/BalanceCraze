@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components';
+import { ScrollablePanel, Slider } from 'phaser3-rex-plugins/templates/ui/ui-components';
+import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle';
 
 import { ART_WIDTH, ART_HEIGHT, STEP_DURATION, BASE_GUI_PATH } from '../Utils';
 
@@ -13,6 +14,9 @@ const MIN_COLOR = 0;
 const MAX_COLOR = 4;
 const BIG_MIDGET_CHANCE = 50;
 
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
@@ -21,6 +25,7 @@ class GameScene extends Phaser.Scene {
         this.score = 0;
 
         this.onScroll = this.onScroll.bind(this);
+        this.onSlider = this.onSlider.bind(this);
     }
 
     preload() {
@@ -37,7 +42,7 @@ class GameScene extends Phaser.Scene {
         this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor('#993f3e');
         this.createBackground();
 
-        this.scoreText = this.add.text(ART_WIDTH - 50, 0, this.score.toString(), {
+        this.scoreText = this.add.text(ART_WIDTH - 110, 0, this.score.toString(), {
             fontFamily: 'Montserrat',
             fontSize: '300px',
             color: '#000',
@@ -53,6 +58,10 @@ class GameScene extends Phaser.Scene {
         this.swing = new Swing();
         this.swing.create(this);
 
+        let sliderTrack = new RoundRectangle(this, 0, 0, 0, 0, 25, 0x000000).setAlpha(0.2);
+        let sliderThumb = new RoundRectangle(this, 0, 0, 25, 25, 25, 0x000000).setAlpha(0.4);
+        this.add.existing(sliderTrack);
+        this.add.existing(sliderThumb);
         this.scrollPanel = new ScrollablePanel(this, {
             scrollMode: 0,
             panel: {
@@ -60,7 +69,21 @@ class GameScene extends Phaser.Scene {
                 mask: false
             }
         });
+        this.slider = new Slider(this, {
+            x: ART_WIDTH - 60,
+            y: 70,
+            height: 1235,
+            width: 25,
+            orientation: 1,
+            track: sliderTrack,
+            thumb: sliderThumb,
+            input: 'drag',
+            valuechangeCallback: this.onSlider
+        }).setOrigin(1, 0).layout();
+        this.slider.setActive(false).setVisible(false);
+
         this.add.existing(this.scrollPanel);
+        this.add.existing(this.slider);
         this.input.on('wheel', this.onScroll);
 
         this.createNewMidget();
@@ -168,7 +191,64 @@ class GameScene extends Phaser.Scene {
     }
 
     onScroll(pointer, gameObjects, deltaX, deltaY, deltaZ) {
-        this.scrollPanel.childOY -= deltaY / 4;
+        let overflow = this.getOverflow();
+        let value = this.getScrollY() - deltaY / 4;
+        value = value < 0 ? value : 0;
+        value = value > -overflow ? value : -overflow;
+        this.changeScroll(value, overflow);
+    }
+
+    onSlider(newValue, oldValue, slider) {
+        let overflow = this.getOverflow();
+        this.scrollPanel.childOY = -overflow * newValue;
+    }
+
+    updateSlider() {
+        let overflow = this.getOverflow();
+        let sliderValue = overflow != 0 ? -this.getScrollY() / overflow : 0;
+        this.slider.setValue(sliderValue);
+        console.log(overflow);
+        if (overflow > 0)
+            this.showSlider();
+        else
+            this.hideSlider();
+    }
+
+    changeScroll(value, overflow) {
+        let sliderValue = overflow != 0 ? -value / overflow : 0;
+        this.scrollPanel.childOY = value;
+        this.slider.setValue(sliderValue);
+    }
+
+    getOverflow() {
+        let y = this.character.pole.getLowestPoint(this.getScrollY());
+        let overflow = y - ART_HEIGHT;
+        overflow = overflow < 0 ? 0 : overflow;
+        return overflow;
+    }
+
+    getScrollY() {
+        return this.scrollPanel.childOY;
+    }
+
+    hideSlider() {
+        this.tweens.add({
+            targets: this.slider,
+            alpha: 0,
+            duration: 2000,
+            ease: 'Quad.In',
+            onComplete: () => this.slider.setActive(false).setVisible(false)
+        });
+    }
+
+    showSlider() {
+        this.tweens.add({
+            targets: this.slider,
+            alpha: 1,
+            duration: 2000,
+            ease: 'Quad.In',
+            onStart: () => this.slider.setActive(true).setVisible(true)
+        });
     }
 }
 

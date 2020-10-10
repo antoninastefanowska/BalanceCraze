@@ -203,6 +203,16 @@ class Pole {
                 slot.getFirst().changeBodyAngle(-this.angle, context);
         }
     }
+
+    getLowestPoint(scrollY = 0) {
+        let max = 0;
+        for (let slot of this.slots) {
+            let y = slot.getLowestPoint(scrollY).y;
+            if (y > max)
+                max = y;
+        }
+        return max;
+    }
 }
 
 export default Pole;

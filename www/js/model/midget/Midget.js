@@ -277,8 +277,10 @@ class Midget {
         });
     }
 
-    getGlobalPosition() {
-        return getGlobalPosition(this.container);
+    getGlobalPosition(scrollY = 0) {
+        let position = getGlobalPosition(this.container);
+        position.y -= scrollY;
+        return position;
     }
 
     getHeight() {

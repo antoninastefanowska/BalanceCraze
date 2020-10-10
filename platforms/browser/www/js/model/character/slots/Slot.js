@@ -51,11 +51,11 @@ class Slot {
 
         context.createNewMidget();
 
-        let position = this.getGlobalPosition();
+        let position = this.getLowestPoint();
         midget.changePosition(position.x, -midget.getHeight());
         midget.changeArms3();
 
-        await midget.fall(context, position.y + this.getSize());
+        await midget.fall(context, position.y - 55);
         
         midget.removeFromContainer(context.globalContainer);
         if (this.getLength() > 0) {
@@ -82,6 +82,7 @@ class Slot {
         if (cleared != null)
             this.clearMidgets(cleared, context);
         
+        context.updateSlider();
         context.swing.showAgain(context);
 
         this.pole.removeArrows(context);
@@ -122,13 +123,13 @@ class Slot {
 
         let score = 0;
         for (let i = 0; i < 3; i++) {
-            position = cleared[i].getGlobalPosition();
+            position = cleared[i].getGlobalPosition(context.getScrollY());
             cleared[i].addToContainerAt(context.globalContainer, position.x, position.y);
             cleared[i].changeBodyAngle(0, context);
             cleared[i].changeArmsAngle(0);
             cleared[i].changeFace2();
             cleared[i].changeArms3();
-            cleared[i].fallAndHide(context, ART_HEIGHT + i * cleared[i].getHeight());
+            cleared[i].fallAndHide(context, ART_HEIGHT - context.getScrollY() + i * cleared[i].getHeight());
 
             if (cleared[i].getType() == Midget.NORMAL)
                 context.midgetPool.push(cleared[i]);
@@ -175,8 +176,22 @@ class Slot {
         return this.midgets[this.getLength() - 1];
     }
 
-    getGlobalPosition() {
-        return getGlobalPosition(this.backContainer);
+    getGlobalPosition(scrollY = 0) {
+        let position = getGlobalPosition(this.backContainer);
+        position.y -= scrollY;
+        return position;
+    }
+
+    getLowestPoint(scrollY = 0) {
+        let lastMidget = this.getLast();
+        let position;
+        if (lastMidget) {
+            position = lastMidget.getGlobalPosition(scrollY);
+            position.y += lastMidget.getHeight();
+        }
+        else
+            position = this.getGlobalPosition(scrollY);
+        return position;  
     }
 }
 
